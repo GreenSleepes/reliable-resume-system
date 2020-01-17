@@ -1,0 +1,13 @@
+OrdererOrgs:
+    - Name: Authority1
+        Domain: authority1.com
+        Specs:
+            - Hostname: authority1
+PeerOrgs:
+    - Name: Institution1
+        Domain: institution1.com
+        EnableNodeOUs: true
+        Template:
+            Count: 1
+        Users:
+            Count: 1
