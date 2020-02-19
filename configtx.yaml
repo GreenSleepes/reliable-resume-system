@@ -4,7 +4,7 @@ Organizations:
 
         Name: Authority1
         ID: Authority1
-        MSPDir: crypto-config/authorities/authority1.com/msp
+        MSPDir: crypto-config/ordererOrganizations/authority1.com/msp
 
         Policies:
             Readers:
@@ -21,7 +21,7 @@ Organizations:
 
         Name: Institution1
         ID: Institution1
-        MSPDir: crypto-config/institutions/institution1.com/msp
+        MSPDir: crypto-config/peerOrganizations/institution1.com/msp
 
         Policies:
             Readers:
@@ -79,7 +79,7 @@ Application: &ApplicationDefaults
 
 Orderer: &OrdererDefaults
 
-    OrdererType: solo
+    OrdererType: etcdraft
 
     Addresses:
         - authority1.com:7050
@@ -130,19 +130,6 @@ Channel: &ChannelDefaults
 
 Profiles:
 
-    OneOrgOrdererGenesis:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            Organizations:
-                - *Authority1
-            Capabilities:
-                <<: *OrdererCapabilities
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - *Institution1
-
     OneOrgChannel:
         Consortium: SampleConsortium
         <<: *ChannelDefaults
@@ -152,3 +139,31 @@ Profiles:
                 - *Institution1
             Capabilities:
                 <<: *ApplicationCapabilities
+
+    SampleMultiNodeEtcdRaft:
+        <<: *ChannelDefaults
+        Capabilities:
+            <<: *ChannelCapabilities
+        Orderer:
+            <<: *OrdererDefaults
+            OrdererType: etcdraft
+            EtcdRaft:
+                Consenters:
+                - Host: orderer.authority1.com
+                  Port: 7050
+                  ClientTLSCert: crypto-config/ordererOrganizations/authority1.com/orderers/orderer.authority1.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/authority1.com/orderers/orderer.authority1.com/tls/server.crt
+            Addresses:
+                - orderer.authority1.com:7050
+            Organizations:
+                - *Authority1
+            Capabilities:
+                <<: *OrdererCapabilities
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - <<: *Authority1
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Institution1
