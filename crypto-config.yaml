@@ -1,13 +1,21 @@
 OrdererOrgs:
-    - Name: Authority1
-      Domain: authority1.com
-      Specs:
-          - Hostname: orderer
+  - Name: MainAuthorityOrderer
+    Domain: mainauthority.com
+    Specs:
+      - Hostname: orderer
+
 PeerOrgs:
-    - Name: Institution1
-      Domain: institution1.com
-      EnableNodeOUs: true
-      Template:
-          Count: 1
-      Users:
-          Count: 1
+  - Name: MainAuthorityInstitution
+    Domain: institution.mainauthority.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 0
+  - Name: MainAuthorityApplicant
+    Domain: applicant.mainauthority.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 0

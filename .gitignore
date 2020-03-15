@@ -12,6 +12,10 @@
 .DS_Store
 .project
 
+# Channel artifacts and crypto material
+/channel-artifacts
+/crypto-config
+
 # Omit Go vendor directories
 vendor/
 

@@ -1,169 +1,183 @@
+---
+
 Organizations:
 
-    - &Authority1
+  - &MainAuthorityOrderer
+    Name: MainAuthorityOrderer
+    ID: MainAuthorityOrdererMSP
+    MSPDir: crypto-config/ordererOrganizations/mainauthority.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('MainAuthorityOrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('MainAuthorityOrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('MainAuthorityOrdererMSP.admin')"
 
-        Name: Authority1
-        ID: Authority1
-        MSPDir: crypto-config/ordererOrganizations/authority1.com/msp
+  - &MainAuthorityInstitution
+    Name: MainAuthorityInstitution
+    ID: MainAuthorityInstitutionMSP
+    MSPDir: crypto-config/peerOrganizations/institution.mainauthority.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.peer', 'MainAuthorityInstitutionMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('MainAuthorityInstitutionMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('MainAuthorityInstitutionMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.institution.mainauthority.com
+        Port: 7051
 
-        Policies:
-            Readers:
-                Type: Signature
-                Rule: "OR('Authority1.member')"
-            Writers:
-                Type: Signature
-                Rule: "OR('Authority1.member')"
-            Admins:
-                Type: Signature
-                Rule: "OR('Authority1.admin')"
-
-    - &Institution1
-
-        Name: Institution1
-        ID: Institution1
-        MSPDir: crypto-config/peerOrganizations/institution1.com/msp
-
-        Policies:
-            Readers:
-                Type: Signature
-                Rule: "OR('Institution1.admin', 'Institution1.peer', 'Institution1.client')"
-            Writers:
-                Type: Signature
-                Rule: "OR('Institution1.admin', 'Institution1.client')"
-            Admins:
-                Type: Signature
-                Rule: "OR('Institution1.admin')"
-            Endorsement:
-                Type: Signature
-                Rule: "OR('Institution1.peer')"
-
-        AnchorPeers:
-            - Host: peer0.institution1.com
-              Port: 7051
+  - &MainAuthorityApplicant
+    Name: MainAuthorityApplicant
+    ID: MainAuthorityApplicantMSP
+    MSPDir: crypto-config/peerOrganizations/applicant.mainauthority.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('MainAuthorityApplicantMSP.admin', 'MainAuthorityApplicantMSP.peer', 'MainAuthorityApplicantMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('MainAuthorityApplicantMSP.admin', 'MainAuthorityApplicantMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('MainAuthorityApplicantMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('MainAuthorityApplicantMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.applicant.mainauthority.com
+        Port: 9051
 
 Capabilities:
 
-    Channel: &ChannelCapabilities
-        V2_0: true
+  Channel: &ChannelCapabilities
+    V2_0: true
 
-    Orderer: &OrdererCapabilities
-        V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
 
-    Application: &ApplicationCapabilities
-        V2_0: true
+  Application: &ApplicationCapabilities
+    V2_0: true
 
 Application: &ApplicationDefaults
 
-    Organizations:
+  Organizations:
 
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
 
-    Policies:
-        Readers:
-            Type: ImplicitMeta
-            Rule: "ANY Readers"
-        Writers:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
-        Admins:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
-        LifecycleEndorsement:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Endorsement"
-        Endorsement:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Endorsement"
-
-    Capabilities:
-        <<: *ApplicationCapabilities
+  Capabilities:
+    <<: *ApplicationCapabilities
 
 Orderer: &OrdererDefaults
 
-    OrdererType: etcdraft
+  OrdererType: etcdraft
 
-    Addresses:
-        - authority1.com:7050
+  Addresses:
+    - orderer.mainauthority.com:7050
 
-    BatchTimeout: 2s
+  BatchTimeout: 2s
 
-    BatchSize:
-        MaxMessageCount: 10
-        AbsoluteMaxBytes: 99 MB
-        PreferredMaxBytes: 512 KB
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
 
-    Kafka:
-        Brokers:
-            - 127.0.0.1:9092
+  Organizations:
 
-    Organizations:
-
-
-    Policies:
-        Readers:
-            Type: ImplicitMeta
-            Rule: "ANY Readers"
-        Writers:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
-        Admins:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
-        BlockValidation:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
 
 Channel: &ChannelDefaults
 
-    Policies:
-        Readers:
-            Type: ImplicitMeta
-            Rule: "ANY Readers"
-        Writers:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
-        Admins:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
 
-    Capabilities:
-        <<: *ChannelCapabilities
+  Capabilities:
+    <<: *ChannelCapabilities
 
 Profiles:
 
-    OneOrgChannel:
-        Consortium: SampleConsortium
-        <<: *ChannelDefaults
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - *Institution1
-            Capabilities:
-                <<: *ApplicationCapabilities
+  MainChannel:
+    Consortium: MainAuthority
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *MainAuthorityInstitution
+        - *MainAuthorityApplicant
+      Capabilities:
+        <<: *ApplicationCapabilities
 
-    SampleMultiNodeEtcdRaft:
-        <<: *ChannelDefaults
-        Capabilities:
-            <<: *ChannelCapabilities
-        Orderer:
-            <<: *OrdererDefaults
-            OrdererType: etcdraft
-            EtcdRaft:
-                Consenters:
-                - Host: orderer.authority1.com
-                  Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/authority1.com/orderers/orderer.authority1.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/authority1.com/orderers/orderer.authority1.com/tls/server.crt
-            Addresses:
-                - orderer.authority1.com:7050
-            Organizations:
-                - *Authority1
-            Capabilities:
-                <<: *OrdererCapabilities
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - <<: *Authority1
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - *Institution1
+  SampleMultiNodeEtcdRaft:
+    <<: *ChannelDefaults
+    Capabilities:
+      <<: *ChannelCapabilities
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      EtcdRaft:
+        Consenters:
+          - Host: orderer.mainauthority.com
+            Port: 7050
+            ClientTLSCert: crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/tls/server.crt
+            ServerTLSCert: crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/tls/server.crt
+      Addresses:
+        - orderer.mainauthority.com:7050
+      Organizations:
+        - *MainAuthorityOrderer
+      Capabilities:
+        <<: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - <<: *MainAuthorityOrderer
+    Consortiums:
+      MainAuthority:
+        Organizations:
+          - *MainAuthorityInstitution
+          - *MainAuthorityApplicant

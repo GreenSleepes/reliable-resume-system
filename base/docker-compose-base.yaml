@@ -2,37 +2,59 @@ version: '2'
 
 services:
 
-    orderer.authority1.com:
-        container_name: orderer.authority1.com
-        extends:
-            file: peer-base.yaml
-            service: orderer-base
-        volumes:
-                - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-                - ../crypto-config/ordererOrganizations/authority1.com/orderers/orderer.authority1.com/msp:/var/hyperledger/orderer/msp
-                - ../crypto-config/ordererOrganizations/authority1.com/orderers/orderer.authority1.com/tls/:/var/hyperledger/orderer/tls
-                - orderer.authority1.com:/var/hyperledger/production/orderer
-        ports:
-            - 7050:7050
+  orderer.mainauthority.com:
+    container_name: orderer.mainauthority.com
+    extends:
+      file: peer-base.yaml
+      service: orderer-base
+    volumes:
+      - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp:/var/hyperledger/orderer/msp
+      - ../crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/tls/:/var/hyperledger/orderer/tls
+      - orderer.mainauthority.com:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
 
-    peer0.institution1.com:
-        container_name: peer0.institution1.com
-        extends:
-            file: peer-base.yaml
-            service: peer-base
-        environment:
-            - CORE_PEER_ID=peer0.institution1.com
-            - CORE_PEER_ADDRESS=peer0.institution1.com:7051
-            - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-            - CORE_PEER_CHAINCODEADDRESS=peer0.institution1.com:7052
-            - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-            - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.institution1.com:8051
-            - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.institution1.com:7051
-            - CORE_PEER_LOCALMSPID=Authority1
-        volumes:
-                - /var/run/:/host/var/run/
-                - ../crypto-config/peerOrganizations/institution1.com/peers/peer0.institution1.com/msp:/etc/hyperledger/fabric/msp
-                - ../crypto-config/peerOrganizations/institution1.com/peers/peer0.institution1.com/tls:/etc/hyperledger/fabric/tls
-                - peer0.institution1.com:/var/hyperledger/production
-        ports:
-            - 7051:7051
+  peer0.institution.mainauthority.com:
+    container_name: peer0.institution.mainauthority.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.institution.mainauthority.com
+      - CORE_PEER_ADDRESS=peer0.institution.mainauthority.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.institution.mainauthority.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.institution.mainauthority.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.institution.mainauthority.com:7051
+      - CORE_PEER_LOCALMSPID=MainAuthorityInstitutionMSP
+    volumes:
+      - /var/run/:/host/var/run/
+      - ../crypto-config/peerOrganizations/institution.mainauthority.com/peers/peer0.institution.mainauthority.com/msp:/etc/hyperledger/fabric/msp
+      - ../crypto-config/peerOrganizations/institution.mainauthority.com/peers/peer0.institution.mainauthority.com/tls:/etc/hyperledger/fabric/tls
+      - peer0.institution.mainauthority.com:/var/hyperledger/production
+    ports:
+      - 7051:7051
+
+  peer0.applicant.mainauthority.com:
+    container_name: peer0.applicant.mainauthority.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.applicant.mainauthority.com
+      - CORE_PEER_ADDRESS=peer0.applicant.mainauthority.com:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.applicant.mainauthority.com:9052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.applicant.mainauthority.com:9051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.applicant.mainauthority.com:9051
+      - CORE_PEER_LOCALMSPID=MainAuthorityApplicantMSP
+    volumes:
+      - /var/run/:/host/var/run/
+      - ../crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer0.applicant.mainauthority.com/msp:/etc/hyperledger/fabric/msp
+      - ../crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer0.applicant.mainauthority.com/tls:/etc/hyperledger/fabric/tls
+      - peer0.applicant.mainauthority.com:/var/hyperledger/production
+    ports:
+      - 9051:9051
