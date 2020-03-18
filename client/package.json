@@ -29,6 +29,7 @@
     "fabric-client": "^1.4.8",
     "fabric-common": "^1.4.8",
     "fabric-network": "^1.4.8",
-    "helmet": "^3.21.3"
+    "helmet": "^3.21.3",
+    "pem": "^1.14.4"
   }
 }

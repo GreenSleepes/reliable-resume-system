@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const { readFile } = require('fs').promises;
 const { createServer } = require('https');
 const { join } = require('path');
 
@@ -52,6 +53,34 @@ app.use((err, req, res, next) => {
     }
 });
 
-// Listen the port for the connections with TLS.
-const { cert, key } = require('./http-keys');
-createServer({ cert, key }, app).listen(443, () => console.log('The HTTPS server is started and listening.'));
+/*
+  Import the X.509 certificate and private key from `/keys/cert.pem` and `/keys/key.pem`.
+  The certificate and private key must be in PEM format.
+  A self-signed certificate will be generated if there has no certificate provided.
+*/
+Promise.all([readFile('./keys/cert.pem'), readFile('./keys/key.pem')])
+    .then(files => {
+        return {
+            cert: files[0],
+            key: files[1]
+        };
+    })
+    .catch(() => {
+        return new Promise((resolve, reject) => {
+            require('pem').createCertificate({
+                selfSigned: true,
+                days: 7
+            }, (err, keys) => {
+                if (err) reject(err);
+                resolve({
+                    cert: keys.certificate,
+                    key: keys.serviceKey
+                });
+            });
+        });
+    })
+    .then(options => {
+        // Listen the port for the connections with TLS.
+        createServer(options, app).listen(8443, () => console.log('The HTTPS server is started and listening.'));
+    })
+    .catch(err => console.error(err));
