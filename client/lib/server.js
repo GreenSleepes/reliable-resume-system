@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 });
 
 // Serve the static files.
-app.use(express.static(join(process.cwd(), 'public')));
+app.use(express.static(join(__dirname, '..', 'public')));
 
 // Set up the body parser.
 app.use(require('body-parser').json());
@@ -38,7 +38,7 @@ app.use(require('body-parser').json());
 app.use('/api', require('./routes'));
 
 // Return the index page if the GET request is unavailable.
-const indexPath = join(process.cwd(), 'public', 'index.html');
+const indexPath = join(__dirname, '..', 'public', 'index.html');
 app.get('*', (req, res) => res.sendFile(indexPath));
 
 // Return a 400 response if the request is unavailable.
@@ -58,7 +58,7 @@ app.use((err, req, res, next) => {
   The certificate and private key must be in PEM format.
   A self-signed certificate will be generated if there has no certificate provided.
 */
-Promise.all([readFile('./keys/cert.pem'), readFile('./keys/key.pem')])
+Promise.all([readFile(join(__dirname, '..', 'keys', 'cert.pem')), readFile(join(__dirname, '..', 'keys', 'key.pem'))])
     .then(files => {
         return {
             cert: files[0],

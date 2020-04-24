@@ -5,7 +5,7 @@ const { newFileSystemWallet } = require('fabric-network').Wallets;
 const { join } = require('path');
 
 /**
- * Initialise the client of the network for the user.
+ * The process that initialise the client of the network for the user.
  * @module peer/init
  */
 module.exports = async () => {
