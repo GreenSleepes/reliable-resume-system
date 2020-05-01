@@ -6,7 +6,11 @@ const router = require('express').Router();
 // Initialise the client of the network for the user.
 require('./init')().then(client => {
 
-    const { ca, wallet } = client;
+    const { ca, network } = client;
+
+    router.post('/resume', (req, res) => {
+
+    });
 
 }).catch(err => console.error(err));
 
