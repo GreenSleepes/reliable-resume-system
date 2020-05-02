@@ -81,6 +81,6 @@ Promise.all([readFile(join(__dirname, '..', 'keys', 'cert.pem')), readFile(join(
     })
     .then(options => {
         // Listen the port for the connections with TLS.
-        createServer(options, app).listen(8443, () => console.log('The HTTPS server is started and listening.'));
+        createServer(options, app).listen(process.env.PORT || 8443, process.env.HOST, () => console.log('The HTTPS server is started and listening.'));
     })
     .catch(err => console.error(err));

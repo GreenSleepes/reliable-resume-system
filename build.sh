@@ -8,6 +8,9 @@ if [ ! -d bin ]; then
     fi
 fi
 
+# Pull Node.js docker image.
+docker pull node:12
+
 # Generate key material.
 ./bin/cryptogen generate --config=./crypto-config.yaml
 

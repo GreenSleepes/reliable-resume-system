@@ -10,7 +10,7 @@ volumes:
 
 networks:
 
-  byfn:
+  rrs:
 
 services:
 
@@ -18,25 +18,67 @@ services:
     extends:
       file: base/docker-compose-base.yaml
       service: orderer.mainauthority.com
-    container_name: orderer.mainauthority.com
     networks:
-      - byfn
+      - rrs
 
   peer0.institution.mainauthority.com:
-    container_name: peer0.institution.mainauthority.com
     extends:
       file: base/docker-compose-base.yaml
       service: peer0.institution.mainauthority.com
     networks:
-      - byfn
+      - rrs
 
   peer0.applicant.mainauthority.com:
-    container_name: peer0.applicant.mainauthority.com
     extends:
       file: base/docker-compose-base.yaml
       service: peer0.applicant.mainauthority.com
     networks:
-      - byfn
+      - rrs
+
+  ca.mainauthority.com:
+    extends:
+      file: base/docker-compose-base.yaml
+      service: ca.mainauthority.com
+    networks:
+      - rrs
+
+  ca.institution.mainauthority.com:
+    extends:
+      file: base/docker-compose-base.yaml
+      service: ca.institution.mainauthority.com
+    networks:
+      - rrs
+
+  ca.applicant.mainauthority.com:
+    extends:
+      file: base/docker-compose-base.yaml
+      service: ca.applicant.mainauthority.com
+    networks:
+      - rrs
+
+  client.applicant.mainauthority.com:
+    container_name: client.applicant.mainauthority.com
+    extends:
+      file: base/client-base.yaml
+      service: client-base
+    environment:
+      - PORT=8443
+      - HOST=0.0.0.0
+      - CLIENT_ID=MainAuthorityApplicant
+      - CCP_PATH=/var/run/rrs/ccp/ccp.applicant.mainauthority.com.json
+      - WALLET_PATH=/var/run/rrs/wallet
+      - CA_URL=https://localhost:8054
+    depends_on:
+      - orderer.mainauthority.com
+      - peer0.institution.mainauthority.com
+      - peer0.applicant.mainauthority.com
+      - ca.mainauthority.com
+      - ca.institution.mainauthority.com
+      - ca.applicant.mainauthority.com
+    ports:
+      - 8443:8443
+    networks:
+      - rrs
 
   cli:
     container_name: cli
@@ -67,5 +109,8 @@ services:
       - orderer.mainauthority.com
       - peer0.institution.mainauthority.com
       - peer0.applicant.mainauthority.com
+      - ca.mainauthority.com
+      - ca.institution.mainauthority.com
+      - ca.applicant.mainauthority.com
     networks:
-      - byfn
+      - rrs

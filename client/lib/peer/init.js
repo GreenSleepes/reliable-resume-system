@@ -2,6 +2,7 @@
 
 const FabricCAServices = require('fabric-ca-client');
 const { Gateway, Wallets } = require('fabric-network');
+const { readFile } = require('fs').promises;
 const { join } = require('path');
 
 /**
@@ -10,9 +11,10 @@ const { join } = require('path');
  */
 module.exports = async () => {
     const ca = new FabricCAServices(process.env.CA_URL);
-    const wallet = await Wallets.newFileSystemWallet(join(__dirname, '..', '..', 'wallet'));
+    const wallet = await Wallets.newFileSystemWallet(process.env.WALLET_PATH);
+    const ccp = JSON.parse(await readFile(process.env.CCP_PATH, 'utf8'));
     const gateway = new Gateway();
-    await gateway.connect(process.env.CLIENT_CONFIG_PATH, {
+    await gateway.connect(ccp, {
         wallet,
         identity: process.env.CLIENT_ID,
         discovery: {

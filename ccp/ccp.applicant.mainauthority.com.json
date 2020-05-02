@@ -1,0 +1,49 @@
+{
+    "name": "ccp.applicant.mainauthority.com",
+    "version": "1.0.0",
+    "client": {
+        "organization": "MainAuthorityApplicant",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "MainAuthorityApplicant": {
+            "mspid": "MainAuthorityApplicantMSP",
+            "peers": [
+                "peer0.applicant.mainauthority.com"
+            ],
+            "certificateAuthorities": [
+                "ca.applicant.mainauthority.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.applicant.mainauthority.com": {
+            "url": "grpcs://localhost:9051",
+            "tlsCACerts": {
+                "pem": "../crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.applicant.mainauthority.com",
+                "hostnameOverride": "peer0.applicant.mainauthority.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.applicant.mainauthority.com": {
+            "url": "https://localhost:9054",
+            "caName": "MainAuthorityApplicantCA",
+            "tlsCACerts": {
+                "pem": "../crypto-config/peerOrganizations/applicant.mainauthority.com/ca/ca.applicant.mainauthority.com-cert.pem"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}
