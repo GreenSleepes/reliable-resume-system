@@ -3,7 +3,6 @@
 const FabricCAServices = require('fabric-ca-client');
 const { Gateway, Wallets } = require('fabric-network');
 const { readFile } = require('fs').promises;
-const { join } = require('path');
 
 /**
  * The process that initialise the client of the network for the user.

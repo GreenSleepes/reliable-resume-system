@@ -45,6 +45,7 @@ app.get('*', (req, res) => res.sendFile(indexPath));
 app.all('*', (req, res) => res.sendStatus(400));
 
 // Set up the error handler.
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
     if (err) {
         console.error(err);
@@ -81,6 +82,6 @@ Promise.all([readFile(join(__dirname, '..', 'keys', 'cert.pem')), readFile(join(
     })
     .then(options => {
         // Listen the port for the connections with TLS.
-        createServer(options, app).listen(process.env.PORT || 8443, process.env.HOST, () => console.log('The HTTPS server is started and listening.'));
+        createServer(options, app).listen(process.env.PORT, process.env.HOST, () => console.log('The HTTPS server is started and listening.'));
     })
     .catch(err => console.error(err));
