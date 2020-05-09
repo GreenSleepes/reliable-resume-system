@@ -9,18 +9,46 @@ const { readFile } = require('fs').promises;
  * @module peer/init
  */
 module.exports = async () => {
-    const ca = new FabricCAServices(process.env.CA_URL);
-    const wallet = await Wallets.newFileSystemWallet(process.env.WALLET_PATH);
-    const ccp = JSON.parse(await readFile(process.env.CCP_PATH, 'utf8'));
-    const gateway = new Gateway();
-    await gateway.connect(ccp, {
-        wallet,
-        identity: process.env.CLIENT_ID,
-        discovery: {
-            asLocalhost: true,
-            enabled: true
+    try {
+
+        const ca = new FabricCAServices(process.env.CA_URL);
+        const wallet = await Wallets.newFileSystemWallet(process.env.WALLET_PATH);
+        let identity = await wallet.get('admin');
+
+        // Enroll the admin identity if it is not exist.
+        if (!identity) {
+            const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
+            await wallet.put('admin', {
+                credentials: {
+                    certificate: enrollment.certificate,
+                    privateKey: enrollment.key.toBytes()
+                },
+                type: 'X.509',
+                mspId: process.env.MSP_ID
+            });
+            identity = await wallet.get('admin');
         }
-    });
-    const network = await gateway.getNetwork('main-channel');
-    return { ca, network };
+
+        // Build the user object.
+        const provider = wallet.getProviderRegistry().getProvider(identity.type);
+        const user = await provider.getUserContext(identity, 'admin');
+
+        const ccp = JSON.parse(await readFile(process.env.CCP_PATH, 'utf8'));
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: 'admin',
+            discovery: {
+                asLocalhost: true,
+                enabled: true
+            }
+        });
+        const network = await gateway.getNetwork('main-channel');
+
+        return { network };
+
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
 };

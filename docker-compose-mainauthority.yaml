@@ -64,10 +64,10 @@ services:
     environment:
       - PORT=8443
       - HOST=0.0.0.0
-      - CLIENT_ID=MainAuthorityApplicant
       - CCP_PATH=/var/run/rrs/ccp/ccp.applicant.mainauthority.com.json
       - WALLET_PATH=/var/run/rrs/wallet
       - CA_URL=https://localhost:8054
+      - MSP_ID=MainAuthorityApplicantMSP
     depends_on:
       - orderer.mainauthority.com
       - peer0.institution.mainauthority.com
