@@ -13,3 +13,4 @@ services:
       - ../client:/var/run/rrs/client
       - ../wallet:/var/run/rrs/wallet
       - ../ccp:/var/run/rrs/ccp
+      - ../crypto-config:/var/run/rrs/crypto-config

@@ -4,9 +4,6 @@
   "private": true,
   "description": "The client for the user of Reliable Resume System.",
   "main": "index.js",
-  "scripts": {
-    "start": "NODE_ENV=production node index"
-  },
   "directories": {
     "lib": "lib"
   },
@@ -26,8 +23,6 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "fabric-ca-client": "beta",
-    "fabric-client": "beta",
-    "fabric-common": "beta",
     "fabric-network": "beta",
     "helmet": "^3.22.0",
     "pem": "^1.14.4"

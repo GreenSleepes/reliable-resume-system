@@ -62,11 +62,11 @@ services:
       file: base/client-base.yaml
       service: client-base
     environment:
-      - PORT=8443
+      - PORT=9443
       - HOST=0.0.0.0
       - CCP_PATH=/var/run/rrs/ccp/ccp.applicant.mainauthority.com.json
       - WALLET_PATH=/var/run/rrs/wallet
-      - CA_URL=https://localhost:8054
+      - CA_URL=https://localhost:9054
       - MSP_ID=MainAuthorityApplicantMSP
     depends_on:
       - orderer.mainauthority.com
@@ -76,7 +76,7 @@ services:
       - ca.institution.mainauthority.com
       - ca.applicant.mainauthority.com
     ports:
-      - 8443:8443
+      - 9443:9443
     networks:
       - rrs
 

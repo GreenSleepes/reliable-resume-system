@@ -26,7 +26,7 @@
         "peer0.applicant.mainauthority.com": {
             "url": "grpcs://localhost:9051",
             "tlsCACerts": {
-                "pem": "../crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem"
+                "pem": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem"
             },
             "grpcOptions": {
                 "ssl-target-name-override": "peer0.applicant.mainauthority.com",
@@ -39,7 +39,7 @@
             "url": "https://localhost:9054",
             "caName": "MainAuthorityApplicantCA",
             "tlsCACerts": {
-                "pem": "../crypto-config/peerOrganizations/applicant.mainauthority.com/ca/ca.applicant.mainauthority.com-cert.pem"
+                "pem": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/ca/ca.applicant.mainauthority.com-cert.pem"
             },
             "httpOptions": {
                 "verify": false
