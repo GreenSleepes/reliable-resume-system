@@ -11,14 +11,15 @@ const { readFile } = require('fs').promises;
 module.exports = async () => {
     try {
 
+        const userID = process.env.USER_ID;
         const ca = new FabricCAServices(process.env.CA_URL);
         const wallet = await Wallets.newFileSystemWallet(process.env.WALLET_PATH);
-        let identity = await wallet.get('admin');
+        let identity = await wallet.get(userID);
 
         // Enroll the admin identity if it is not exist.
         if (!identity) {
-            const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
-            await wallet.put('admin', {
+            const enrollment = await ca.enroll({ enrollmentID: userID, enrollmentSecret: process.env.USER_SECRET });
+            await wallet.put(userID, {
                 credentials: {
                     certificate: enrollment.certificate,
                     privateKey: enrollment.key.toBytes()
@@ -26,18 +27,20 @@ module.exports = async () => {
                 type: 'X.509',
                 mspId: process.env.MSP_ID
             });
-            identity = await wallet.get('admin');
+            identity = await wallet.get(userID);
         }
 
         // Build the user object.
         const provider = wallet.getProviderRegistry().getProvider(identity.type);
-        const user = await provider.getUserContext(identity, 'admin');
+        const user = await provider.getUserContext(identity, userID);
+
+        console.log(`Successfully get the identity "${userID}".`);
 
         const ccp = JSON.parse(await readFile(process.env.CCP_PATH, 'utf8'));
         const gateway = new Gateway();
         await gateway.connect(ccp, {
             wallet,
-            identity: 'admin',
+            identity: userID,
             discovery: {
                 asLocalhost: true,
                 enabled: true
@@ -45,7 +48,9 @@ module.exports = async () => {
         });
         const network = await gateway.getNetwork('main-channel');
 
-        return { network };
+        console.log('Successfully connect the "main-channel".');
+
+        return { network, user };
 
     } catch (err) {
         console.error(err);

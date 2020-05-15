@@ -1,8 +1,11 @@
 OrdererOrgs:
   - Name: MainAuthorityOrderer
     Domain: mainauthority.com
+    EnableNodeOUs: true
     Specs:
       - Hostname: orderer
+        SANS:
+          - localhost
 
 PeerOrgs:
   - Name: MainAuthorityInstitution
@@ -10,12 +13,16 @@ PeerOrgs:
     EnableNodeOUs: true
     Template:
       Count: 1
+      SANS:
+        - localhost
     Users:
-      Count: 0
+      Count: 1
   - Name: MainAuthorityApplicant
     Domain: applicant.mainauthority.com
     EnableNodeOUs: true
     Template:
       Count: 1
+      SANS:
+        - localhost
     Users:
-      Count: 0
+      Count: 1

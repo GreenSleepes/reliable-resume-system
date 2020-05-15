@@ -6,11 +6,11 @@ const router = require('express').Router();
 // Initialise the client of the network for the user.
 require('./init')().then(client => {
 
-    const { network } = client;
+    const { network, user } = client;
 
     router.post('/certificate', (req, res) => {
 
-        const issueCertificate = network.getContract('IssueCertificate');
+        //const issueCertificate = network.getContract('IssueCertificate');
 
     });
 

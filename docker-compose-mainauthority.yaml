@@ -1,15 +1,16 @@
 version: '2'
 
 volumes:
-
   orderer.mainauthority.com:
-
   peer0.institution.mainauthority.com:
-
   peer0.applicant.mainauthority.com:
+  ca.mainauthority.com:
+  ca.institution.mainauthority.com:
+  ca.applicant.mainauthority.com:
+  client.applicant.mainauthority.com:
+  cli:
 
 networks:
-
   rrs:
 
 services:
@@ -64,16 +65,16 @@ services:
     environment:
       - PORT=9443
       - HOST=0.0.0.0
+      - TLS_CERT_FILE=/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem
+      - TLS_KEY_FILE=/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/priv_sk
       - CCP_PATH=/var/run/rrs/ccp/ccp.applicant.mainauthority.com.json
       - WALLET_PATH=/var/run/rrs/wallet
-      - CA_URL=https://localhost:9054
+      - CA_URL=https://ca.applicant.mainauthority.com:9054
       - MSP_ID=MainAuthorityApplicantMSP
+      - USER_ID=admin
+      - USER_SECRET=adminpw
     depends_on:
-      - orderer.mainauthority.com
-      - peer0.institution.mainauthority.com
       - peer0.applicant.mainauthority.com
-      - ca.mainauthority.com
-      - ca.institution.mainauthority.com
       - ca.applicant.mainauthority.com
     ports:
       - 9443:9443
@@ -82,7 +83,7 @@ services:
 
   cli:
     container_name: cli
-    image: hyperledger/fabric-tools
+    image: hyperledger/fabric-tools:$IMAGE_TAG
     tty: true
     stdin_open: true
     environment:
@@ -101,7 +102,7 @@ services:
     command: /bin/bash
     volumes:
       - /var/run/:/host/var/run/
-      - ./../chaincode/:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
+      - ./chaincode/:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
       - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
       - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts

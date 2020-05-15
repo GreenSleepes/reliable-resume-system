@@ -16,6 +16,8 @@ Organizations:
       Admins:
         Type: Signature
         Rule: "OR('MainAuthorityOrdererMSP.admin')"
+    OrdererEndpoints:
+      - orderer.mainauthority.com:7050
 
   - &MainAuthorityInstitution
     Name: MainAuthorityInstitution
@@ -36,7 +38,7 @@ Organizations:
         Rule: "OR('MainAuthorityInstitutionMSP.peer')"
     AnchorPeers:
       - Host: peer0.institution.mainauthority.com
-        Port: 7051
+        Port: 8051
 
   - &MainAuthorityApplicant
     Name: MainAuthorityApplicant
@@ -143,7 +145,7 @@ Channel: &ChannelDefaults
 Profiles:
 
   MainChannel:
-    Consortium: MainAuthority
+    Consortium: MainAuthorityConsortium
     <<: *ChannelDefaults
     Application:
       <<: *ApplicationDefaults
@@ -177,7 +179,7 @@ Profiles:
       Organizations:
         - <<: *MainAuthorityOrderer
     Consortiums:
-      MainAuthority:
+      MainAuthorityConsortium:
         Organizations:
           - *MainAuthorityInstitution
           - *MainAuthorityApplicant

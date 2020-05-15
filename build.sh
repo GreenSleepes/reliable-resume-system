@@ -2,14 +2,11 @@ cd $(dirname "$0") || exit 1
 
 # Install the docker image of Fabric and download the platform-specific binaries.
 if [ ! -d bin ]; then
-    curl -s https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash /dev/stdin "-s"
+    curl -s https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash /dev/stdin 2.1.0 1.4.7 "-ds"
     if [ -d config ]; then
         rm -r config
     fi
 fi
-
-# Pull Node.js docker image.
-docker pull node:12
 
 # Generate key material.
 ./bin/cryptogen generate --config=./crypto-config.yaml
@@ -23,3 +20,9 @@ docker pull node:12
 # Generate the configuration update transaction to sets the anchor peers.
 ./bin/configtxgen -profile MainChannel -channelID main-channel -asOrg MainAuthorityInstitution -outputAnchorPeersUpdate ./channel-artifacts/main-institution-anchor.tx
 ./bin/configtxgen -profile MainChannel -channelID main-channel -asOrg MainAuthorityApplicant -outputAnchorPeersUpdate ./channel-artifacts/main-applicant-anchor.tx
+
+# Install the node modules.
+cd client || exit 1
+if [ ! -d node_modules ]; then
+    npm install
+fi

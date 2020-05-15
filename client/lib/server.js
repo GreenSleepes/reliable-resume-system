@@ -54,34 +54,18 @@ app.use((err, req, res, next) => {
     }
 });
 
-/*
-  Import the X.509 certificate and private key from `/keys/cert.pem` and `/keys/key.pem`.
-  The certificate and private key must be in PEM format.
-  A self-signed certificate will be generated if there has no certificate provided.
-*/
-Promise.all([readFile(join(__dirname, '..', 'keys', 'cert.pem')), readFile(join(__dirname, '..', 'keys', 'key.pem'))])
+// Import the X.509 certificate and private key.
+Promise.all([readFile(process.env.TLS_CERT_FILE), readFile(process.env.TLS_KEY_FILE)])
     .then(files => {
-        return {
+        const options = {
             cert: files[0],
             key: files[1]
         };
-    })
-    .catch(() => {
-        return new Promise((resolve, reject) => {
-            require('pem').createCertificate({
-                selfSigned: true,
-                days: 7
-            }, (err, keys) => {
-                if (err) reject(err);
-                resolve({
-                    cert: keys.certificate,
-                    key: keys.serviceKey
-                });
-            });
-        });
-    })
-    .then(options => {
+        const { HOST, PORT } = process.env;
         // Listen the port for the connections with TLS.
-        createServer(options, app).listen(process.env.PORT, process.env.HOST, () => console.log('The HTTPS server is started and listening.'));
+        createServer(options, app).listen(PORT, HOST, () => console.log(`The HTTPS server is listening at https://${HOST}:${PORT}.`));
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+        console.error(err);
+        process.exit(1);
+    });

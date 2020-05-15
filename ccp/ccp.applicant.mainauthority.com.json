@@ -24,7 +24,7 @@
     },
     "peers": {
         "peer0.applicant.mainauthority.com": {
-            "url": "grpcs://localhost:9051",
+            "url": "grpcs://peer0.applicant.mainauthority.com:9051",
             "tlsCACerts": {
                 "pem": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem"
             },
@@ -36,13 +36,13 @@
     },
     "certificateAuthorities": {
         "ca.applicant.mainauthority.com": {
-            "url": "https://localhost:9054",
+            "url": "https://ca.applicant.mainauthority.com:9054",
             "caName": "MainAuthorityApplicantCA",
             "tlsCACerts": {
                 "pem": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/ca/ca.applicant.mainauthority.com-cert.pem"
             },
             "httpOptions": {
-                "verify": false
+                "verify": true
             }
         }
     }
