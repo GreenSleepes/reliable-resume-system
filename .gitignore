@@ -15,7 +15,6 @@
 # Generated elements
 /channel-artifacts
 /crypto-config
-/scripts
 /wallet
 msp/
 fabric-ca-server.db

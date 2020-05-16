@@ -1,17 +1,27 @@
 {
     "name": "ccp.applicant.mainauthority.com",
-    "version": "1.0.0",
-    "client": {
-        "organization": "MainAuthorityApplicant",
-        "connection": {
-            "timeout": {
-                "peer": {
-                    "endorser": "300"
-                }
-            }
+    "version": "1.1",
+    "channels": {
+        "main-channel": {
+            "orderers": [
+                "orderer.mainauthority.com"
+            ],
+            "peers": [
+                "peer0.institution.mainauthority.com",
+                "peer0.applicant.mainauthority.com"
+            ]
         }
     },
     "organizations": {
+        "MainAuthorityInstitution": {
+            "mspid": "MainAuthorityInstitutionMSP",
+            "peers": [
+                "peer0.institution.mainauthority.com"
+            ],
+            "certificateAuthorities": [
+                "ca.institution.mainauthority.com"
+            ]
+        },
         "MainAuthorityApplicant": {
             "mspid": "MainAuthorityApplicantMSP",
             "peers": [
@@ -22,27 +32,79 @@
             ]
         }
     },
+    "orderers": {
+        "orderer.mainauthority.com": {
+            "url": "grpcs://orderer.mainauthority.com:7050",
+            "grpcOptions": {
+                "ssl-target-name-override": "orderer.mainauthority.com",
+                "hostnameOverride": "orderer.mainauthority.com"
+            },
+            "tlsCACerts": {
+                "path": "/var/run/rrs/crypto-config/ordererOrganizations/mainauthority.com/tlsca/tlsca.mainauthority.com-cert.pem"
+            }
+        }
+    },
+    "client": {
+        "organization": "MainAuthorityApplicant",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
     "peers": {
+        "peer0.institution.mainauthority.com": {
+            "url": "grpcs://peer0.institution.mainauthority.com:8051",
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.institution.mainauthority.com",
+                "hostnameOverride": "peer0.institution.mainauthority.com"
+            },
+            "tlsCACerts": {
+                "path": "/var/run/rrs/crypto-config/peerOrganizations/institution.mainauthority.com/tlsca/tlsca.institution.mainauthority.com-cert.pem"
+            }
+        },
         "peer0.applicant.mainauthority.com": {
             "url": "grpcs://peer0.applicant.mainauthority.com:9051",
-            "tlsCACerts": {
-                "pem": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem"
-            },
             "grpcOptions": {
                 "ssl-target-name-override": "peer0.applicant.mainauthority.com",
                 "hostnameOverride": "peer0.applicant.mainauthority.com"
+            },
+            "tlsCACerts": {
+                "path": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem"
             }
         }
     },
     "certificateAuthorities": {
+        "ca.mainauthority.com": {
+            "url": "https://ca.mainauthority.com:7054",
+            "caName": "MainAuthorityCA",
+            "httpOptions": {
+                "verify": true
+            },
+            "tlsCACerts": {
+                "path": "/var/run/rrs/crypto-config/ordererOrganizations/mainauthority.com/ca/ca.mainauthority.com-cert.pem"
+            }
+        },
+        "ca.institution.mainauthority.com": {
+            "url": "https://ca.institution.mainauthority.com:8054",
+            "caName": "MainAuthorityInstitutionCA",
+            "httpOptions": {
+                "verify": true
+            },
+            "tlsCACerts": {
+                "path": "/var/run/rrs/crypto-config/peerOrganizations/institution.mainauthority.com/ca/ca.institution.mainauthority.com-cert.pem"
+            }
+        },
         "ca.applicant.mainauthority.com": {
             "url": "https://ca.applicant.mainauthority.com:9054",
             "caName": "MainAuthorityApplicantCA",
-            "tlsCACerts": {
-                "pem": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/ca/ca.applicant.mainauthority.com-cert.pem"
-            },
             "httpOptions": {
                 "verify": true
+            },
+            "tlsCACerts": {
+                "path": "/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/ca/ca.applicant.mainauthority.com-cert.pem"
             }
         }
     }

@@ -12,10 +12,10 @@ fi
 ./bin/cryptogen generate --config=./crypto-config.yaml
 
 # Generate a genesis block.
-./bin/configtxgen -profile SampleMultiNodeEtcdRaft -channelID main-channel -outputBlock ./channel-artifacts/genesis.block
+./bin/configtxgen -profile SampleMultiNodeEtcdRaft -channelID sys-channel -outputBlock ./channel-artifacts/sys-channel.block
 
 # Generate a transaction for create channel.
-./bin/configtxgen -profile MainChannel -channelID main-channel -outputCreateChannelTx ./channel-artifacts/channel.tx
+./bin/configtxgen -profile MainChannel -channelID main-channel -outputCreateChannelTx ./channel-artifacts/main-channel.tx
 
 # Generate the configuration update transaction to sets the anchor peers.
 ./bin/configtxgen -profile MainChannel -channelID main-channel -asOrg MainAuthorityInstitution -outputAnchorPeersUpdate ./channel-artifacts/main-institution-anchor.tx
