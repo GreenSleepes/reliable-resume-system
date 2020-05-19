@@ -132,13 +132,11 @@ services:
       - ./crypto-config:/etc/crypto-config
       - peer0.applicant.mainauthority.com:/var/hyperledger/production
       - ./channel-artifacts:/etc/channel-artifacts
+      - ./chaincode:/etc/chaincode
       - ./scripts:/etc/scripts
     depends_on:
       - peer0.institution.mainauthority.com
       - peer0.applicant.mainauthority.com
-    ports:
-      - 8053:8051
-      - 9053:9051
     networks:
       - rrs
 
@@ -222,11 +220,21 @@ services:
     environment:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=reliable-resume-system_rrs
       - FABRIC_LOGGING_SPEC=INFO
-      - CORE_PEER_ID=cli
+      - CORE_PEER_ID=peer0.institution.mainauthority.com
       - CORE_PEER_ADDRESS=peer0.institution.mainauthority.com:7051
       - CORE_PEER_LOCALMSPID=MainAuthorityInstitutionMSP
       - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.institution.mainauthority.com:8052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.institution.mainauthority.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.institution.mainauthority.com:8051
       - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/institution.mainauthority.com/peers/peer0.institution.mainauthority.com/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/institution.mainauthority.com/peers/peer0.institution.mainauthority.com/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/institution.mainauthority.com/peers/peer0.institution.mainauthority.com/tls/ca.crt
@@ -235,14 +243,14 @@ services:
     command: /bin/bash
     volumes:
       - /var/run/:/host/var/run/
-      - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+      - peer0.institution.mainauthority.com:/var/hyperledger/production
+      - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto
       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+      - ./chaincode:/opt/gopath/src/github.com/hyperledger/fabric/peer/chaincode
     depends_on:
-      - orderer.mainauthority.com
-      - peer0.institution.mainauthority.com
-      - peer0.applicant.mainauthority.com
-      - ca.mainauthority.com
+      - init.mainauthority.com
       - ca.institution.mainauthority.com
-      - ca.applicant.mainauthority.com
+    ports:
+      - 8053:8051
     networks:
       - rrs

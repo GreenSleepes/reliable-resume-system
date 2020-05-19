@@ -1,6 +1,6 @@
 {
     "name": "item-cc",
-    "version": "1",
+    "version": "1.0.0",
     "description": "Item Contract",
     "main": "index.js",
     "engines": {

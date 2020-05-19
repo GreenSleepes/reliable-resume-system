@@ -10,10 +10,24 @@ require('./init')().then(client => {
 
     const { network, register } = client;
 
-    router.post('/certificate', (req, res) => {
-
-        //const issueCertificate = network.getContract('IssueCertificate');
-
+    router.post('/certificate', async (req, res) => {
+        try {
+            const { issuer, owner, issueDate, itemType, contentHash, provingHash } = req.body;
+            const args = [issuer, owner, issueDate, itemType, contentHash, provingHash];
+            args.forEach(arg => {
+                if (typeof arg !== 'string') res.sendStatus(400);
+            });
+            const issueCertificate = network.getContract('issue_certificate');
+            const transaction = issueCertificate.createTransaction('org.mainauthority.item:issue');
+            console.log('Start to test and issue a new certificate with arguments:\n[%s, %s, %s, %s, %s, %s]', ...args);
+            const testResult = await transaction.evaluate(...args);
+            console.log(`After testing, the result will be:\n${testResult.toString('hex')}`);
+            const result = await transaction.submit(...args);
+            console.log(`Successfully issue a new certificate, the result is:\n${result.toString('hex')}`);
+            res.sendStatus(201);
+        } catch (err) {
+            res.status(400).type('text/plain').send(err.message);
+        }
     });
 
     // Open the register API if the user is admin.
