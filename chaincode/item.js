@@ -1,6 +1,6 @@
 'use strict';
 
-const Hash = require('./../ledger-api/hash.js');
+const Hash = require('./hash.js');
 
 class Item extends Hash {
 
