@@ -2,6 +2,11 @@
     "name": "ccp.applicant.mainauthority.com",
     "version": "1.1",
     "channels": {
+        "sys-channel": {
+            "orderers": [
+                "orderer.mainauthority.com"
+            ]
+        },
         "main-channel": {
             "orderers": [
                 "orderer.mainauthority.com"

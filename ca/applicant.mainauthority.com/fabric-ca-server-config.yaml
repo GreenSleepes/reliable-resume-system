@@ -67,6 +67,12 @@ ldap:
         - name:
           value:
 
+affiliations:
+  institution:
+    - main
+  applicant:
+    - main
+
 signing:
   default:
     usage:

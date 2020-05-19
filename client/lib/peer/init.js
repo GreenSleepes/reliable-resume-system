@@ -4,6 +4,8 @@ const FabricCAServices = require('fabric-ca-client');
 const { Gateway, Wallets } = require('fabric-network');
 const { readFile } = require('fs').promises;
 
+const { UserIDExistError } = require('./errors');
+
 /**
  * The process that initialise the client of the network for the user.
  * @module peer/init
@@ -42,7 +44,7 @@ module.exports = async () => {
             wallet,
             identity: userID,
             discovery: {
-                asLocalhost: true,
+                asLocalhost: false,
                 enabled: true
             }
         });
@@ -50,7 +52,43 @@ module.exports = async () => {
 
         console.log('Successfully connect the "main-channel".');
 
-        return { network, user };
+        /**
+         * @typedef UserRegistrationForm
+         * @property {string} userID - The identity of the user.
+         * @property {string} password - The password for login.
+         * @property {string} [role=client] - The role of the user.
+         * @property {string} [affiliation=applicant.main] - The affiliation that the user associated.
+         */
+
+        /**
+         * Register a new user by the admin identity.
+         * @param {UserRegistrationForm} form - The form of the registration.
+         */
+        const register = async form => {
+            try {
+                if (await wallet.get(form.userID)) throw new UserIDExistError(form.userID);
+                await ca.register({
+                    enrollmentID: form.userID,
+                    enrollmentSecret: form.password,
+                    role: form.role || 'client',
+                    affiliation: form.affiliation || 'applicant.main'
+                }, user);
+                const enrollment = await ca.enroll({ enrollmentID: form.userID, enrollmentSecret: form.password });
+                await wallet.put(form.userID, {
+                    credentials: {
+                        certificate: enrollment.certificate,
+                        privateKey: enrollment.key.toBytes()
+                    },
+                    type: 'X.509',
+                    mspId: process.env.MSP_ID
+                });
+                return await wallet.get(form.userID);
+            } catch (err) {
+                throw err;
+            }
+        };
+
+        return { network, register };
 
     } catch (err) {
         console.error(err);
