@@ -21,7 +21,7 @@ require('./init')().then(client => {
             const transaction = issueCertificate.createTransaction('org.mainauthority.item:issue');
             console.log('Start to test and issue a new certificate with arguments:\n[%s, %s, %s, %s, %s, %s]', ...args);
             const testResult = await transaction.evaluate(...args);
-            console.log(`After testing, the result will be:\n${testResult.toString('hex')}`);
+            console.log(`After submitting, the result will be:\n${testResult.toString('hex')}`);
             const result = await transaction.submit(...args);
             console.log(`Successfully issue a new certificate, the result is:\n${result.toString('hex')}`);
             res.sendStatus(201);

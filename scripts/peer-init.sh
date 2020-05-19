@@ -30,7 +30,7 @@ if [ ! -f /etc/channel-artifacts/main-channel.block ]; then
 
     # Query the installed chaincode.
     peer lifecycle chaincode queryinstalled >&tmp
-	PACKAGE_ID=$(sed -n "/issue_certificate/{s/^Package ID: //; s/, Label:.*$//; p;}" tmp)
+    PACKAGE_ID=$(sed -n "/issue_certificate/{s/^Package ID: //; s/, Label:.*$//; p;}" tmp)
 
     # Approve the installed chaincode for peer0.institution.mainauthority.com.
     peer lifecycle chaincode approveformyorg -o orderer.mainauthority.com:7050 --ordererTLSHostnameOverride orderer.mainauthority.com --tls true --cafile /etc/crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp/tlscacerts/tlsca.mainauthority.com-cert.pem --channelID main-channel --name issue_certificate --version 1 --package-id $PACKAGE_ID
@@ -65,7 +65,7 @@ if [ ! -f /etc/channel-artifacts/main-channel.block ]; then
 
     # Query the installed chaincode.
     peer lifecycle chaincode queryinstalled >&tmp
-	PACKAGE_ID=$(sed -n "/issue_certificate/{s/^Package ID: //; s/, Label:.*$//; p;}" tmp)
+    PACKAGE_ID=$(sed -n "/issue_certificate/{s/^Package ID: //; s/, Label:.*$//; p;}" tmp)
 
     # Approve the installed chaincode for peer0.applicant.mainauthority.com.
     peer lifecycle chaincode approveformyorg -o orderer.mainauthority.com:7050 --ordererTLSHostnameOverride orderer.mainauthority.com --tls true --cafile /etc/crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp/tlscacerts/tlsca.mainauthority.com-cert.pem --channelID main-channel --name issue_certificate --version 1 --package-id $PACKAGE_ID
