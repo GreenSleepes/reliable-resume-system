@@ -32,7 +32,7 @@ require('./init')().then(client => {
                     res.sendStatus(201);
                 } catch (err) {
                     if (err instanceof UserIDExistError) {
-                        res.status(403).type('text/plain').send(err.message);
+                        res.status(409).type('text/plain').send(err.message);
                     } else {
                         res.status(400).type('text/plain').send(err.message);
                     }
