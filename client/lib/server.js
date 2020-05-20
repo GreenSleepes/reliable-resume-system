@@ -37,9 +37,12 @@ app.use(require('body-parser').json());
 // Set up the API routing.
 app.use('/api', require('./routes'));
 
-// Return the index page if the GET request is unavailable.
+// Return the index page for the homepage request.
 const indexPath = join(__dirname, '..', 'public', 'index.html');
-app.get('*', (req, res) => res.sendFile(indexPath));
+app.get('/', (req, res) => res.sendFile(indexPath));
+
+// Return a 404 response if the GET request is unavailable.
+app.get('*', (req, res) => res.sendStatus(404));
 
 // Return a 400 response if the request is unavailable.
 app.all('*', (req, res) => res.sendStatus(400));
