@@ -60,6 +60,7 @@ class ItemContract extends Contract {
         return new_item;
     }
     
+    //query the target item from the ledger
     async queryItem(ctx, issuer, contentHash) {
         //retrive the target item from the ledger
         let itemKey = item.makeKey([issuer, contentHash]);
