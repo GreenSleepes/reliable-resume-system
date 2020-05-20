@@ -47,7 +47,7 @@ class API {
      * @property {string} issueDate
      * @property {string} itemType
      * @property {string} contentHash
-     * @property {string} provingHash
+     * @property {string} pwd
      */
 
     /**
