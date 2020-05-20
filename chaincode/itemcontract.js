@@ -45,6 +45,8 @@ class ItemContract extends Contract {
             throw new Error('This item: ' + paperNumber + ' is not owned by ' + owner);
         } 
         
+        let currentPHash = crypto.createHash('sha256').update(currentPwd + contentHash).digest('hex');
+        let newPHash = crypto.createHash('sha256').update(newPwd + contentHash).digest('hex');
         //validate the old hash
         if (new_item.getPHash() === currentPHash) {
             new_item.setPHash(newPHash);
