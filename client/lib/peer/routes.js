@@ -30,8 +30,8 @@ require('./init')().then(client => {
 
     router.post('/certificate', async (req, res) => {
         try {
-            const { issuer, owner, issueDate, itemType, contentHash, provingHash } = req.body;
-            const args = [issuer, owner, issueDate, itemType, contentHash, provingHash];
+            const { issuer, owner, issueDate, itemType, contentHash, pwd } = req.body;
+            const args = [issuer, owner, issueDate, itemType, contentHash, pwd];
             args.forEach(arg => {
                 if (typeof arg !== 'string') res.sendStatus(400);
             });
