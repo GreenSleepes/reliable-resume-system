@@ -1,92 +1,90 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<title>Reliable Resume System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui" />
-        <meta name="robots" content="noindex" />
-        <script type="module">
-            'use strict';
-            import API from '/js/api.js';
-        </script>
-        <title>Reliable Resume System</title>
-    </head>
 
-    <body>
-        <div>
-            <div class="w3-container">
-  	<h2>Reliable resume system</h2>
- 		<div class="w3-card-4" style="width:75%;">
-  		  <header class="w3-container w3-blue">
-      		<h1>Issue Resume Item</h1>
-    	  </header>
+  <head>
 
-    	<div class="w3-container">
-      <p>Issue resume item (certificate, start of employment or end of employment) to the applicant.</p>
-      <form name="issueForm" action="/certificate" method="post">
-  		Issuer: <input type="text" name="issuer"><br>
-		Owner: <input type="text" name="owner"><br>
-		Issue Date: <input type="date" name="issueDate"><br>
-		Item Type:<br>
-		 <input type="radio" name="itemType" value="CERTIFICATE">Certificate<br>
-         <input type="radio" name="itemType" value="START_OF_EMPLOYMENT">Start of employment<br>
-         <input type="radio" name="itemType" value="END_OF_EMPLOYMENT">End of employment<br>
-		Content hash: <input type="text" name="contentHash"><br>
-		Initial password: <input type="text" name="pwd"><br>
-    	<input type="submit" value="Issue" class="w3-btn w3-blue"  onclick="issueCertificate(document.getElementById("issueForm").submit())">
-	  </form>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui" />
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <script type="module">
+      'use strict';
+      import API from '/js/api.js';
+    </script>
+    <title>Reliable Resume System</title>
 
-    	</div>
+  </head>
 
- 
-  	</div>
- 
-  <br>
-  
-   <div class="w3-card-4" style="width:75%;">
-    	<header class="w3-container w3-red">
-      	<h1>Query Resume Item</h1>
-    	</header>
+  <body>
 
-    <div class="w3-container">
-      <p>Query the resume item by using the content hash and the owner.</p>
-      <form name="queryForm" action="/certificate" method="post">
-		Owner: <input type="text" name="owner"><br>
-		Content hash: <input type="text" name="contentHash"><br>
-        <input type="submit" value="Query" class="w3-btn w3-red" onclick="queryItem(document.getElementById("queryForm").submit())">
-	  </form>
+    <div>
+      <div class="w3-container">
 
-    </div>
+        <h2>Reliable resume system</h2>
 
- 
-  </div>
-<br>
-<div class="w3-card-4" style="width:75%;">
-    	<header class="w3-container w3-black">
-      	<h1>Change Proving Hash</h1>
-    	</header>
+        <div class="w3-card-4" style="width:75%;">
 
-    <div class="w3-container">
-      <p>Change the proving hash by using the current password and the new one.</p>
-      <form name="changePHForm" action="/certificate" method="patch">
-		Owner: <input type="text" name="owner"><br>
-		Content hash: <input type="text" name="contentHash"><br>
-        Current password: <input type="text" name="currentPwd"><br>
-        New password: <input type="text" name="newPwd"><br>
-        <input type="submit" value="Change" class="w3-btn w3-black" onclick="updateHash(document.getElementById("changePHForm").submit())">
-	  </form>
+          <header class="w3-container w3-blue">
+            <h1>Issue Resume Item</h1>
+          </header>
 
-    </div>
+          <div class="w3-container">
+            <p>Issue resume item (certificate, start of employment or end of employment) to the applicant.</p>
+            <form name="issueForm" action="/certificate" method="post">
+              Issuer: <input type="text" name="issuer" /><br />
+              Owner: <input type="text" name="owner" /><br />
+              Issue Date: <input type="date" name="issueDate" /><br />
+              Item Type:<br />
+              <input type="radio" name="itemType" value="CERTIFICATE" />Certificate<br />
+              <input type="radio" name="itemType" value="START_OF_EMPLOYMENT" />Start of employment<br />
+              <input type="radio" name="itemType" value="END_OF_EMPLOYMENT" />End of employment<br />
+              Content hash: <input type="text" name="contentHash" /><br />
+              Initial password: <input type="text" name="pwd" /><br />
+              <input type="submit" value="Issue" class="w3-btn w3-blue" onclick="API.issueCertificate(document.getElementById('issueForm').submit())" />
+            </form>
+          </div>
 
- 
-  </div>
-  
-</div>
         </div>
-    </body>
+
+        <br />
+
+        <div class="w3-card-4" style="width:75%;">
+          <header class="w3-container w3-red">
+            <h1>Query Resume Item</h1>
+          </header>
+          <div class="w3-container">
+            <p>Query the resume item by using the content hash and the owner.</p>
+            <form name="queryForm" action="/certificate" method="post">
+              Owner: <input type="text" name="owner" /><br />
+              Content hash: <input type="text" name="contentHash"><br />
+              <input type="submit" value="Query" class="w3-btn w3-red" onclick="API.queryItem(document.getElementById('queryForm').submit())" />
+            </form>
+          </div>
+        </div>
+
+        <br />
+
+        <div class="w3-card-4" style="width:75%;">
+          <header class="w3-container w3-black">
+            <h1>Change Proving Hash</h1>
+          </header>
+          <div class="w3-container">
+            <p>Change the proving hash by using the current password and the new one.</p>
+            <form name="changePHForm" action="/certificate" method="patch">
+              Owner: <input type="text" name="owner" /><br />
+              Content hash: <input type="text" name="contentHash" /><br />
+              Current password: <input type="text" name="currentPwd" /><br />
+              New password: <input type="text" name="newPwd" /><br />
+              <input type="submit" value="Change" class="w3-btn w3-black" onclick="API.updateHash(document.getElementById('changePHForm').submit())" />
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </body>
 
 </html>

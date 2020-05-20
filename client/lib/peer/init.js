@@ -18,7 +18,7 @@ module.exports = async () => {
         const wallet = await Wallets.newFileSystemWallet(process.env.WALLET_PATH);
         let identity = await wallet.get(userID);
 
-        // Enroll the admin identity if it is not exist.
+        // Enroll the identity if it is not exist.
         if (!identity) {
             const enrollment = await ca.enroll({ enrollmentID: userID, enrollmentSecret: process.env.USER_SECRET });
             await wallet.put(userID, {

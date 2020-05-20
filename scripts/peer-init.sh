@@ -61,9 +61,6 @@ if [ ! -f /etc/channel-artifacts/main-channel.block ]; then
     peer lifecycle chaincode install issue_certificate.tar.gz
 
     # Query the installed chaincode.
-    peer lifecycle chaincode queryinstalled
-
-    # Query the installed chaincode.
     peer lifecycle chaincode queryinstalled >&tmp
     PACKAGE_ID=$(sed -n "/issue_certificate/{s/^Package ID: //; s/, Label:.*$//; p;}" tmp)
 

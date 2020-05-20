@@ -1,0 +1,102 @@
+version: '3.7'
+
+volumes:
+  peer1.applicant.mainauthority.com:
+
+networks:
+  rrs:
+
+services:
+
+  peer1.applicant.mainauthority.com:
+    container_name: peer1.applicant.mainauthority.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=reliable-resume-system_rrs
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+      - CORE_PEER_ID=peer1.applicant.mainauthority.com
+      - CORE_PEER_ADDRESS=peer1.applicant.mainauthority.com:10051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
+      - CORE_PEER_CHAINCODEADDRESS=peer1.applicant.mainauthority.com:10052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.applicant.mainauthority.com:10051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.applicant.mainauthority.com:10051
+      - CORE_PEER_LOCALMSPID=MainAuthorityApplicantMSP
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer1.applicant.mainauthority.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer1.applicant.mainauthority.com/tls:/etc/hyperledger/fabric/tls
+      - peer1.applicant.mainauthority.com:/var/hyperledger/production
+    depends_on:
+      - orderer.mainauthority.com
+    ports:
+      - 10051:10051
+    networks:
+      - rrs
+
+  new.init.mainauthority.com:
+    container_name: new.init.mainauthority.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=reliable-resume-system_rrs
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: sh /etc/scripts/peer-new.sh
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./crypto-config:/etc/crypto-config
+      - peer0.applicant.mainauthority.com:/var/hyperledger/production
+      - ./channel-artifacts:/etc/channel-artifacts
+      - ./chaincode:/etc/chaincode
+      - ./scripts:/etc/scripts
+    depends_on:
+      - peer1.applicant.mainauthority.com
+    networks:
+      - rrs
+
+  new.client.applicant.mainauthority.com:
+    container_name: new.client.applicant.mainauthority.com
+    image: node:12
+    environment:
+      - NODE_ENV=production
+      - PORT=10443
+      - HOST=0.0.0.0
+      - TLS_CERT_FILE=/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/tlsca.applicant.mainauthority.com-cert.pem
+      - TLS_KEY_FILE=/var/run/rrs/crypto-config/peerOrganizations/applicant.mainauthority.com/tlsca/priv_sk
+      - CCP_PATH=/var/run/rrs/ccp/ccp.mainauthority.com.json
+      - WALLET_PATH=/var/run/rrs/wallet
+      - CA_URL=https://ca.applicant.mainauthority.com:9054
+      - MSP_ID=MainAuthorityApplicantMSP
+      - USER_ID=newclient
+      - USER_SECRET=newclientpw
+    working_dir: /var/run/rrs/client
+    command: sh -c "npm install && node index"
+    volumes:
+      - ./client:/var/run/rrs/client
+      - ./wallet:/var/run/rrs/wallet
+      - ./ccp:/var/run/rrs/ccp
+      - ./crypto-config:/var/run/rrs/crypto-config
+    depends_on:
+      - init.mainauthority.com
+      - ca.applicant.mainauthority.com
+    ports:
+      - 10443:10443
+    networks:
+      - rrs
