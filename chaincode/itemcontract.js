@@ -36,7 +36,7 @@ class ItemContract extends Contract {
     }
 
     //changing the existing proving hash
-    async updateHash(ctx, issuer,owner, contentHash, currentPHash, newPHash) {
+    async updateHash(ctx, issuer,owner, contentHash, currentPwd, newPwd) {
 	//retrive the target item from the ledger
         let itemKey = item.makeKey([issuer, contentHash]);
         let new_item = await ctx.itemList.getItem(itemKey);
@@ -59,7 +59,15 @@ class ItemContract extends Contract {
         await ctx.itemList.updateItem(new_item);
         return new_item;
     }
-
+    
+    async queryItem(ctx, issuer, contentHash) {
+        //retrive the target item from the ledger
+        let itemKey = item.makeKey([issuer, contentHash]);
+        let target_item = await ctx.itemList.getItem(itemKey);
+        
+	console.log(target_item.serialize());
+        return target_item.serialize();
+        }
 
 }
 
