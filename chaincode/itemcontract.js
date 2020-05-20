@@ -1,10 +1,10 @@
 'use strict';
 
 const { Contract, Context } = require('fabric-contract-api');
-
 const Item = require('./item.js');
 const ItemList = require('./itemlist.js');
 
+//list of the resume items
 class itemContext extends Context {
 
     constructor() {
@@ -13,6 +13,7 @@ class itemContext extends Context {
     }
 }
 
+//item smart contract defination
 class ItemContract extends Contract {
 
     constructor() {
@@ -23,36 +24,35 @@ class ItemContract extends Contract {
         return new itemContext();
     }
 
-
+    //isssue resume item
     async issue(ctx, issuer, owner, issueDate, itemType, contentHash, provingHash) {
 
         let new_item = Item.createInstance(ctx, issuer, owner, issueDate, itemType, contentHash, provingHash);
 
-        new_item.setIssued();
-
-        new_item.setOwner(issuer);
-
+	//adding the newly created item to the world state ledger
         await ctx.itemList.addItem(new_item);
-
         return new_item;
     }
 
-
+    //changing the existing proving hash
     async updateHash(ctx, issuer,owner, contentHash, currentPHash, newPHash) {
-
+	//retrive the target item from the ledger
         let itemKey = item.makeKey([issuer, contentHash]);
         let new_item = await ctx.itemList.getItem(itemKey);
-
+	
+	//check if the update is made by owner as owner should be the only one who able the update so
         if (new_item.getOwner() !== owner) {
             throw new Error('This item: ' + paperNumber + ' is not owned by ' + owner);
         } 
         
+        //validate the old hash
         if (new_item.getPHash() === currentPHash) {
             new_item.setPHash(newPHash);
         }else{
         	throw new Error('The old hash entered does not match');
         }
-
+	
+	//update the proving hash
         await ctx.itemList.updateItem(new_item);
         return new_item;
     }
