@@ -49,16 +49,6 @@
             }
         }
     },
-    "client": {
-        "organization": "MainAuthorityApplicant",
-        "connection": {
-            "timeout": {
-                "peer": {
-                    "endorser": "300"
-                }
-            }
-        }
-    },
     "peers": {
         "peer0.institution.mainauthority.com": {
             "url": "grpcs://peer0.institution.mainauthority.com:8051",

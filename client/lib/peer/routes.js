@@ -10,6 +10,24 @@ require('./init')().then(client => {
 
     const { network, register } = client;
 
+    router.get('/certificate', async (req, res) => {
+        try {
+            const { issuer, contentHash } = req.query;
+            const args = [issuer, contentHash];
+            args.forEach(arg => {
+                if (typeof arg !== 'string') res.sendStatus(400);
+            });
+            const issueCertificate = network.getContract('issue_certificate');
+            const transaction = issueCertificate.createTransaction('org.mainauthority.item:queryItem');
+            console.log('Start to search for the certificate with arguments:\n[%s, %s]', ...args);
+            const result = JSON.parse((await transaction.evaluate(...args)).toString());
+            console.log(`Item found, the item is:\n${result}`);
+            res.json(result);
+        } catch (err) {
+            res.status(400).type('text/plain').send(err.message);
+        }
+    });
+
     router.post('/certificate', async (req, res) => {
         try {
             const { issuer, owner, issueDate, itemType, contentHash, provingHash } = req.body;
@@ -20,11 +38,31 @@ require('./init')().then(client => {
             const issueCertificate = network.getContract('issue_certificate');
             const transaction = issueCertificate.createTransaction('org.mainauthority.item:issue');
             console.log('Start to test and issue a new certificate with arguments:\n[%s, %s, %s, %s, %s, %s]', ...args);
-            const testResult = await transaction.evaluate(...args);
-            console.log(`After submitting, the result will be:\n${testResult.toString('hex')}`);
-            const result = await transaction.submit(...args);
-            console.log(`Successfully issue a new certificate, the result is:\n${result.toString('hex')}`);
-            res.sendStatus(201);
+            const testResult = JSON.parse((await transaction.evaluate(...args)).toString());
+            console.log(`After submitting, the result will be:\n${testResult}`);
+            const result = JSON.parse((await transaction.submit(...args)).toString());
+            console.log(`Successfully issue a new certificate, the result is:\n${result}`);
+            res.status(201).json(result);
+        } catch (err) {
+            res.status(400).type('text/plain').send(err.message);
+        }
+    });
+
+    router.patch('/certificate', async (req, res) => {
+        try {
+            const { issuer, owner, contentHash, currentPwd, newPwd } = req.body;
+            const args = [issuer, owner, contentHash, currentPwd, newPwd];
+            args.forEach(arg => {
+                if (typeof arg !== 'string') res.sendStatus(400);
+            });
+            const issueCertificate = network.getContract('issue_certificate');
+            const transaction = issueCertificate.createTransaction('org.mainauthority.item:updateHash');
+            console.log('Start to test and update the certificate with arguments:\n[%s, %s, %s, %s, %s]', ...args);
+            const testResult = JSON.parse((await transaction.evaluate(...args)).toString());
+            console.log(`After submitting, the result will be:\n${testResult}`);
+            const result = JSON.parse((await transaction.submit(...args)).toString());
+            console.log(`Successfully update the proving hash, the result is:\n${result}`);
+            res.json(result);
         } catch (err) {
             res.status(400).type('text/plain').send(err.message);
         }
