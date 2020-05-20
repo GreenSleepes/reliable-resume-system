@@ -16,7 +16,7 @@ class HashList {
     }
     //return the JSON of the required hash from the ledger
     async getHash(key) {
-        let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+        let ledgerKey = this.ctx.stub.createCompositeKey(this.name, Hash.splitKey(key));
         let data = await this.ctx.stub.getState(ledgerKey);
         if (data && data.toString('utf8')) {
             let hash = Hash.deserialize(data, this.supportedClasses);
