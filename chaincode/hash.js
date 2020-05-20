@@ -22,11 +22,12 @@ class Hash {
     serialize() {
         return State.serialize(this);
     }
-
+    
+    //object toString()
     static serialize(object) {
         return Buffer.from(JSON.stringify(object));
     }
-
+    //return data into object
     static deserialize(data, supportedClasses) {
         let json = JSON.parse(data.toString());
         let objClass = supportedClasses[json.class];
@@ -37,13 +38,13 @@ class Hash {
 
         return object;
     }
-
+    //return class int object
     static deserializeClass(data, objClass) {
         let json = JSON.parse(data.toString());
         let object = new (objClass)(json);
         return object;
     }
-
+    //combine the elements into a single key	
     static makeKey(keyParts) {
         return keyParts.map(part => JSON.stringify(part)).join(':');
     }
