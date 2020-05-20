@@ -9,9 +9,55 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui" />
     <meta name="robots" content="noindex" />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-    <script type="module">
-      'use strict';
-      import API from '/js/api.js';
+    <script src="/js/api.js"></script>
+    <script>
+      const queryItemSubmit = async () => {
+        try {
+          const form = new FormData(document.getElementById('queryForm'));
+          const issuer = form.get('issuer');
+          const contentHash = form.get('contentHash');
+          const result = await API.queryItem({ issuer, contentHash });
+          console.log(result);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      const issueCertificateSubmit = async () => {
+        try {
+          const form = new FormData(document.getElementById('issueForm'));
+          const issuer = form.get('issuer');
+          const owner = form.get('owner');
+          const issueDate = form.get('issueDate');
+          const itemType = form.get('itemType');
+          const contentHash = form.get('contentHash');
+          const pwd = form.get('pwd');
+          const result = await API.issueCertificate({ issuer, owner, issueDate, itemType, contentHash, pwd });
+          console.log(result);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      const updateHashSubmit = async () => {
+        try {
+          const form = new FormData(document.getElementById('changePHForm'));
+          const issuer = form.get('issuer');
+          const owner = form.get('owner');
+          const contentHash = form.get('contentHash');
+          const currentPwd = form.get('currentPwd');
+          const newPwd = form.get('newPwd');
+          const result = await API.updateHash({ issuer, owner, contentHash, currentPwd, newPwd });
+          console.log(result);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      const registerSubmit = async () => {
+        try {
+
+        } catch (err) {
+          console.error(err);
+        }
+      };
     </script>
     <title>Reliable Resume System</title>
 
@@ -32,7 +78,7 @@
 
           <div class="w3-container">
             <p>Issue resume item (certificate, start of employment or end of employment) to the applicant.</p>
-            <form name="issueForm" action="/certificate" method="post">
+            <form id="issueForm" action="javascript:;">
               Issuer: <input type="text" name="issuer" /><br />
               Owner: <input type="text" name="owner" /><br />
               Issue Date: <input type="date" name="issueDate" /><br />
@@ -42,7 +88,7 @@
               <input type="radio" name="itemType" value="END_OF_EMPLOYMENT" />End of employment<br />
               Content hash: <input type="text" name="contentHash" /><br />
               Initial password: <input type="text" name="pwd" /><br />
-              <input type="submit" value="Issue" class="w3-btn w3-blue" onclick="API.issueCertificate(document.getElementById('issueForm').submit())" />
+              <input type="submit" value="Issue" class="w3-btn w3-blue" onclick="issueCertificateSubmit()" />
             </form>
           </div>
 
@@ -56,10 +102,10 @@
           </header>
           <div class="w3-container">
             <p>Query the resume item by using the content hash and the owner.</p>
-            <form name="queryForm" action="/certificate" method="post">
+            <form id="queryForm" action="javascript:;">
               Owner: <input type="text" name="owner" /><br />
-              Content hash: <input type="text" name="contentHash"><br />
-              <input type="submit" value="Query" class="w3-btn w3-red" onclick="API.queryItem(document.getElementById('queryForm').submit())" />
+              Content hash: <input type="text" name="contentHash" /><br />
+              <input type="submit" value="Query" class="w3-btn w3-red" onclick="queryItemSubmit()" />
             </form>
           </div>
         </div>
@@ -72,12 +118,12 @@
           </header>
           <div class="w3-container">
             <p>Change the proving hash by using the current password and the new one.</p>
-            <form name="changePHForm" action="/certificate" method="patch">
+            <form id="changePHForm" action="javascript:;">
               Owner: <input type="text" name="owner" /><br />
               Content hash: <input type="text" name="contentHash" /><br />
               Current password: <input type="text" name="currentPwd" /><br />
               New password: <input type="text" name="newPwd" /><br />
-              <input type="submit" value="Change" class="w3-btn w3-black" onclick="API.updateHash(document.getElementById('changePHForm').submit())" />
+              <input type="submit" value="Change" class="w3-btn w3-black" onclick="updateHashSubmit()" />
             </form>
           </div>
         </div>

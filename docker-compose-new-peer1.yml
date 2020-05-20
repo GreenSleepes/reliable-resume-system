@@ -38,8 +38,6 @@ services:
       - ./crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer1.applicant.mainauthority.com/msp:/etc/hyperledger/fabric/msp
       - ./crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer1.applicant.mainauthority.com/tls:/etc/hyperledger/fabric/tls
       - peer1.applicant.mainauthority.com:/var/hyperledger/production
-    depends_on:
-      - orderer.mainauthority.com
     ports:
       - 10051:10051
     networks:
@@ -58,11 +56,11 @@ services:
       - CORE_PEER_PROFILE_ENABLED=true
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: sh /etc/scripts/peer-new.sh
+    command: sh /etc/scripts/peer-new-peer1.sh
     volumes:
       - /var/run/:/host/var/run/
       - ./crypto-config:/etc/crypto-config
-      - peer0.applicant.mainauthority.com:/var/hyperledger/production
+      - peer1.applicant.mainauthority.com:/var/hyperledger/production
       - ./channel-artifacts:/etc/channel-artifacts
       - ./chaincode:/etc/chaincode
       - ./scripts:/etc/scripts
@@ -84,8 +82,8 @@ services:
       - WALLET_PATH=/var/run/rrs/wallet
       - CA_URL=https://ca.applicant.mainauthority.com:9054
       - MSP_ID=MainAuthorityApplicantMSP
-      - USER_ID=newclient
-      - USER_SECRET=newclientpw
+      - USER_ID=admin
+      - USER_SECRET=adminpw
     working_dir: /var/run/rrs/client
     command: sh -c "npm install && node index"
     volumes:
@@ -94,8 +92,7 @@ services:
       - ./ccp:/var/run/rrs/ccp
       - ./crypto-config:/var/run/rrs/crypto-config
     depends_on:
-      - init.mainauthority.com
-      - ca.applicant.mainauthority.com
+      - new.init.mainauthority.com
     ports:
       - 10443:10443
     networks:

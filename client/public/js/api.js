@@ -108,9 +108,3 @@ class API {
     }
 
 }
-
-/**
- * The API for communicate with the server.
- * @module api
- */
-export default API;
