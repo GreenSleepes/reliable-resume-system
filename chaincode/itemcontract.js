@@ -3,6 +3,7 @@
 const { Contract, Context } = require('fabric-contract-api');
 const Item = require('./item.js');
 const ItemList = require('./itemlist.js');
+const crypto = require('crypto');
 
 //list of the resume items
 class itemContext extends Context {
