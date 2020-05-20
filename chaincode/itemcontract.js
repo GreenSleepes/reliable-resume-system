@@ -26,8 +26,9 @@ class ItemContract extends Contract {
     }
 
     //isssue resume item
-    async issue(ctx, issuer, owner, issueDate, itemType, contentHash, provingHash) {
-
+    async issue(ctx, issuer, owner, issueDate, itemType, contentHash, pwd) {
+	
+	let provingHash = crypto.createHash('sha256').update(pwd + contentHash).digest('hex');  
         let new_item = Item.createInstance(ctx, issuer, owner, issueDate, itemType, contentHash, provingHash);
 
 	//adding the newly created item to the world state ledger
