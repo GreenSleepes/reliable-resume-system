@@ -16,11 +16,11 @@ class Hash {
     }
 
     getSplitKey(){
-        return State.splitKey(this.key);
+        return Hash.splitKey(this.key);
     }
 
     serialize() {
-        return State.serialize(this);
+        return Hash.serialize(this);
     }
     
     //object toString()
