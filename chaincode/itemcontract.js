@@ -32,7 +32,7 @@ class ItemContract extends Contract {
 
 	//adding the newly created item to the world state ledger
         await ctx.itemList.addItem(new_item);
-        return new_item;
+        return new_item.toBuffer();
     }
 
     //changing the existing proving hash
@@ -57,7 +57,7 @@ class ItemContract extends Contract {
 	
 	//update the proving hash
         await ctx.itemList.updateItem(new_item);
-        return new_item;
+        return new_item.toBuffer();
     }
     
     //query the target item from the ledger
@@ -67,7 +67,7 @@ class ItemContract extends Contract {
         let target_item = await ctx.itemList.getItem(itemKey);
         
 	console.log(target_item.serialize());
-        return target_item;
+        return target_item.toBuffer();
         }
 
 }
