@@ -67,7 +67,7 @@ class ItemContract extends Contract {
         let target_item = await ctx.itemList.getItem(itemKey);
         
 	console.log(target_item.serialize());
-        return target_item.serialize();
+        return target_item;
         }
 
 }
