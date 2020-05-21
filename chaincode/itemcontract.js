@@ -37,9 +37,9 @@ class ItemContract extends Contract {
     }
 
     //changing the existing proving hash
-    async updateHash(ctx, issuer,owner, contentHash, currentPwd, newPwd) {
+    async updateHash(ctx, owner, contentHash, currentPwd, newPwd) {
 	//retrive the target item from the ledger
-        let itemKey = item.makeKey([issuer, contentHash]);
+        let itemKey = Item.makeKey([owner, contentHash]);
         let new_item = await ctx.itemList.getItem(itemKey);
 	
 	//check if the update is made by owner as owner should be the only one who able the update so
@@ -47,8 +47,9 @@ class ItemContract extends Contract {
             throw new Error('This item: ' + paperNumber + ' is not owned by ' + owner);
         } 
         
-        let currentPHash = crypto.createHash('sha256').update(currentPwd + contentHash).digest('hex');
-        let newPHash = crypto.createHash('sha256').update(newPwd + contentHash).digest('hex');
+        let CHash = new_item.getCHash();
+        let currentPHash = crypto.createHash('sha256').update(currentPwd + CHash).digest('hex');
+        let newPHash = crypto.createHash('sha256').update(newPwd + CHash).digest('hex');
         //validate the old hash
         if (new_item.getPHash() === currentPHash) {
             new_item.setPHash(newPHash);
@@ -62,9 +63,9 @@ class ItemContract extends Contract {
     }
     
     //query the target item from the ledger
-    async queryItem(ctx, issuer, contentHash) {
+    async queryItem(ctx, owner, contentHash) {
         //retrive the target item from the ledger
-        let itemKey = item.makeKey([issuer, contentHash]);
+        let itemKey = item.makeKey([owner, contentHash]);
         let target_item = await ctx.itemList.getItem(itemKey);
         
 	console.log(target_item.serialize());
