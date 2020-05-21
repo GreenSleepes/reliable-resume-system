@@ -35,7 +35,7 @@ class API {
      */
     static async queryItem(form) {
         const { issuer, contentHash } = form;
-        const res = await httpReq(`/api/peer/certificate?issuer=${issuer}&contentHash=${contentHash}`);
+        const res = await httpReq(`/api/peer/certificate?owner=${owner}&contentHash=${contentHash}`);
         if (res.ok) return await res.json();
         else throw new Error(`${res.status} ${res.statusText}: ${await res.text()}`);
     }
