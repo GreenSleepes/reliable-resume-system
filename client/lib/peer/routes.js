@@ -26,7 +26,7 @@ require('./init')().then(client => {
             const transaction = issueCertificate.createTransaction('org.mainauthority.item:queryItem');
             console.log('Start to search for the certificate with arguments:\n[%s, %s]', ...args);
             const result = JSON.parse((await transaction.evaluate(...args)).toString());
-            console.log(`Item found, the item is:\n${result}`);
+            console.log('Item found, the item is:\n%o', result);
             res.json(result);
         } catch (err) {
             console.error(err);
@@ -50,9 +50,9 @@ require('./init')().then(client => {
             const transaction = issueCertificate.createTransaction('org.mainauthority.item:issue');
             console.log('Start to test and issue a new certificate with arguments:\n[%s, %s, %s, %s, %s, %s]', ...args);
             const testResult = JSON.parse((await transaction.evaluate(...args)).toString());
-            console.log(`After submitting, the result will be:\n${testResult}`);
+            console.log('After submitting, the result will be:\n%o', testResult);
             const result = JSON.parse((await transaction.submit(...args)).toString());
-            console.log(`Successfully issue a new certificate, the result is:\n${result}`);
+            console.log('Successfully issue a new certificate, the result is:\n%o', result);
             res.status(201).json(result);
         } catch (err) {
             console.error(err);
@@ -76,9 +76,9 @@ require('./init')().then(client => {
             const transaction = issueCertificate.createTransaction('org.mainauthority.item:updateHash');
             console.log('Start to test and update the certificate with arguments:\n[%s, %s, %s, %s]', ...args);
             const testResult = JSON.parse((await transaction.evaluate(...args)).toString());
-            console.log(`After submitting, the result will be:\n${testResult}`);
+            console.log('After submitting, the result will be:\n%o', testResult);
             const result = JSON.parse((await transaction.submit(...args)).toString());
-            console.log(`Successfully update the proving hash, the result is:\n${result}`);
+            console.log('Successfully update the proving hash, the result is:\n%o', result);
             res.json(result);
         } catch (err) {
             console.error(err);

@@ -35,7 +35,7 @@ class Item {
 
     //combine the elements into a single key
     static makeKey(keyParts) {
-        return keyParts.map(part => JSON.stringify(part)).join(':');
+        return keyParts.join(':');
     }
 
     static splitKey(key) {
