@@ -52,7 +52,7 @@ class Item {
     }
 
     static serialize(object) {
-        return Buffer.from(`{"issuer":"${object.issuer}","owner":"${object.owner}","issueDate":"${object.issueDate}","itemType":"${object.itemType}","contentHash":"${object.contentHash}","provingHash":"${object.provingHash}"}`);
+        return Buffer.from(`{"class":"${object.class}","key":"${object.key}","issuer":"${object.issuer}","owner":"${object.owner}","issueDate":"${object.issueDate}","itemType":"${object.itemType}","contentHash":"${object.contentHash}","provingHash":"${object.provingHash}"}`);
     }
 
     //return data into object
