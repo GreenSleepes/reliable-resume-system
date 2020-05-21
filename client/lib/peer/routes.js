@@ -8,7 +8,7 @@ const router = require('express').Router();
 // Initialise the client of the network for the user.
 require('./init')().then(client => {
 
-    const { network, register } = client;
+    const { network, register, user } = client;
 
     router.get('/certificate', async (req, res) => {
         try {
@@ -46,6 +46,16 @@ require('./init')().then(client => {
                     return;
                 }
             }
+            if (user.getMspid() === 'MainAuthorityApplicantMSP') {
+                console.error('Applicant cannot issue a certificate.');
+                res.status(403).type('text/plain').send('Access Denied: Applicant cannot issue a certificate.');
+                return;
+            }
+            if (issuer !== user.getName()) {
+                console.error('The issuer is not same as the logged-in identity.');
+                res.status(403).type('text/plain').send(`The issuer "${issuer}" is not same as the logged-in identity "${process.env.USER_ID}".`);
+                return;
+            }
             const issueCertificate = network.getContract('issue_certificate');
             const transaction = issueCertificate.createTransaction('org.mainauthority.item:issue');
             console.log('Start to test and issue a new certificate with arguments:\n[%s, %s, %s, %s, %s, %s]', ...args);
@@ -72,6 +82,11 @@ require('./init')().then(client => {
                     return;
                 }
             }
+            if (user.getMspid() === 'MainAuthorityApplicantMSP') {
+                console.error('Applicant cannot update the certificate.');
+                res.status(403).type('text/plain').send('Access Denied: Applicant cannot update the certificate.');
+                return;
+            }
             const issueCertificate = network.getContract('issue_certificate');
             const transaction = issueCertificate.createTransaction('org.mainauthority.item:updateHash');
             console.log('Start to test and update the certificate with arguments:\n[%s, %s, %s, %s]', ...args);
@@ -87,7 +102,7 @@ require('./init')().then(client => {
     });
 
     // Open the register API if the user is admin.
-    if (process.env.USER_ID === 'admin') {
+    if (user.getName() === 'admin') {
         router.post('/register', async (req, res) => {
             const { userID, password, role, affiliation } = req.body;
             console.log(`Received request to create a new identity "${userID}".`);

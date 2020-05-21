@@ -80,30 +80,4 @@ class API {
         else throw new Error(`${res.status} ${res.statusText}: ${await res.text()}`);
     }
 
-    /**
-     * @typedef UserRegistrationForm
-     * @property {string} userID - The identity of the user.
-     * @property {string} password - The password for login.
-     * @property {string} [role=client] - The role of the user.
-     * @property {string} [affiliation=applicant.main] - The affiliation that the user associated.
-     */
-
-    /**
-     * Register a new user.
-     * @param {UserRegistrationForm} form - The form of the registration.
-     */
-    static async register(form) {
-        const { userID, password, role, affiliation } = form;
-        const res = await httpReq('/api/peer/register', 'POST', {
-            userID,
-            password,
-            role: role || 'client',
-            affiliation: affiliation || 'applicant.main'
-        });
-        if (!res.ok) {
-            if (res.status === 409) throw new UserIDExistError(userID);
-            else throw new Error(`${res.status} ${res.statusText}: ${await res.text()}`);
-        }
-    }
-
 }

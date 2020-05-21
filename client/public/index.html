@@ -17,9 +17,9 @@
           const owner = form.get('owner');
           const contentHash = form.get('contentHash');
           const result = await API.queryItem({ owner, contentHash });
-          console.log(result);
+          document.getElementById('queryResult').innerHTML = JSON.stringify(result, null, 4);
         } catch (err) {
-          console.error(err);
+          document.getElementById('queryResult').innerHTML = err.message;
         }
       };
       const issueCertificateSubmit = async () => {
@@ -32,9 +32,9 @@
           const contentHash = form.get('contentHash');
           const pwd = form.get('pwd');
           const result = await API.issueCertificate({ issuer, owner, issueDate, itemType, contentHash, pwd });
-          console.log(result);
+          document.getElementById('issueResult').innerHTML = JSON.stringify(result, null, 4);
         } catch (err) {
-          console.error(err);
+          document.getElementById('issueResult').innerHTML = err.message;
         }
       };
       const updateHashSubmit = async () => {
@@ -45,16 +45,9 @@
           const currentPwd = form.get('currentPwd');
           const newPwd = form.get('newPwd');
           const result = await API.updateHash({ owner, contentHash, currentPwd, newPwd });
-          console.log(result);
+          document.getElementById('changePHResult').innerHTML = JSON.stringify(result, null, 4);
         } catch (err) {
-          console.error(err);
-        }
-      };
-      const registerSubmit = async () => {
-        try {
-
-        } catch (err) {
-          console.error(err);
+          document.getElementById('changePHResult').innerHTML = err.message;
         }
       };
     </script>
@@ -89,6 +82,7 @@
               Initial password: <input type="text" name="pwd" /><br />
               <input type="submit" value="Issue" class="w3-btn w3-blue" onclick="issueCertificateSubmit()" />
             </form>
+            <pre id="issueResult"></pre>
           </div>
 
         </div>
@@ -106,6 +100,7 @@
               Content hash: <input type="text" name="contentHash" /><br />
               <input type="submit" value="Query" class="w3-btn w3-red" onclick="queryItemSubmit()" />
             </form>
+            <pre id="queryResult"></pre>
           </div>
         </div>
 
@@ -124,6 +119,7 @@
               New password: <input type="text" name="newPwd" /><br />
               <input type="submit" value="Change" class="w3-btn w3-black" onclick="updateHashSubmit()" />
             </form>
+            <pre id="changePHResult"></pre>
           </div>
         </div>
 

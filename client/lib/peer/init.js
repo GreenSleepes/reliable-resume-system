@@ -4,6 +4,7 @@ const FabricCAServices = require('fabric-ca-client');
 const { Gateway, Wallets } = require('fabric-network');
 const { readFile } = require('fs').promises;
 const { request } = require('https');
+const { join } = require('path');
 
 const { UserIDExistError } = require('./errors');
 
@@ -57,7 +58,7 @@ module.exports = async () => {
 
         const userID = process.env.USER_ID;
         const ca = new FabricCAServices(process.env.CA_URL);
-        const wallet = await Wallets.newFileSystemWallet(process.env.WALLET_PATH);
+        const wallet = await Wallets.newFileSystemWallet(join(process.env.WALLET_PATH, process.env.MSP_ID));
         let identity = await wallet.get(userID);
 
         // Enroll the identity if it is not exist.
@@ -129,7 +130,7 @@ module.exports = async () => {
             }
         };
 
-        return { network, register };
+        return { network, register, user };
 
     } catch (err) {
         console.error(err);
