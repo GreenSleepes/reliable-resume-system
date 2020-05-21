@@ -40,12 +40,11 @@
       const updateHashSubmit = async () => {
         try {
           const form = new FormData(document.getElementById('changePHForm'));
-          const issuer = form.get('issuer');
           const owner = form.get('owner');
           const contentHash = form.get('contentHash');
           const currentPwd = form.get('currentPwd');
           const newPwd = form.get('newPwd');
-          const result = await API.updateHash({ issuer, owner, contentHash, currentPwd, newPwd });
+          const result = await API.updateHash({ owner, contentHash, currentPwd, newPwd });
           console.log(result);
         } catch (err) {
           console.error(err);

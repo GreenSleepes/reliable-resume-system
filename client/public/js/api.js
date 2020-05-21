@@ -63,7 +63,6 @@ class API {
 
     /**
      * @typedef UpdateHashForm
-     * @property {string} issuer
      * @property {string} owner
      * @property {string} contentHash
      * @property {string} currentPwd

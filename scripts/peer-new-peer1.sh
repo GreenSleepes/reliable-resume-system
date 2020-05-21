@@ -25,13 +25,10 @@ peer lifecycle chaincode queryinstalled >&tmp
 PACKAGE_ID=$(sed -n "/issue_certificate/{s/^Package ID: //; s/, Label:.*$//; p;}" tmp)
 
 # Approve the installed chaincode for peer1.applicant.mainauthority.com.
-peer lifecycle chaincode approveformyorg -o orderer.mainauthority.com:7050 --ordererTLSHostnameOverride orderer.mainauthority.com --tls true --cafile /etc/crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp/tlscacerts/tlsca.mainauthority.com-cert.pem --channelID main-channel --name issue_certificate --version 1 --package-id $PACKAGE_ID
+peer lifecycle chaincode approveformyorg --signature-policy "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.member')" -o orderer.mainauthority.com:7050 --ordererTLSHostnameOverride orderer.mainauthority.com --tls true --cafile /etc/crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp/tlscacerts/tlsca.mainauthority.com-cert.pem --channelID main-channel --name issue_certificate --version 1 --package-id $PACKAGE_ID
 
 # Check whether the chaincode definition is ready to be committed on the channel.
-peer lifecycle chaincode checkcommitreadiness --channelID main-channel --name issue_certificate --version 1
-
-# Commit the chaincode definition on the channel.
-peer lifecycle chaincode commit -o orderer.mainauthority.com:7050 --ordererTLSHostnameOverride orderer.mainauthority.com --tls true --tlsRootCertFiles /etc/crypto-config/peerOrganizations/institution.mainauthority.com/peers/peer0.institution.mainauthority.com/tls/ca.crt --tlsRootCertFiles /etc/crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer0.applicant.mainauthority.com/tls/ca.crt --tlsRootCertFiles /etc/crypto-config/peerOrganizations/applicant.mainauthority.com/peers/peer1.applicant.mainauthority.com/tls/ca.crt --cafile /etc/crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp/tlscacerts/tlsca.mainauthority.com-cert.pem --channelID main-channel --peerAddresses peer0.institution.mainauthority.com:8051 --peerAddresses peer0.applicant.mainauthority.com:9051 --peerAddresses peer1.applicant.mainauthority.com:10051 --name issue_certificate --version 1
+peer lifecycle chaincode checkcommitreadiness --signature-policy "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.member')" --channelID main-channel --name issue_certificate --version 1
 
 # Query the committed chaincode definitions by channel on peer1.applicant.mainauthority.com.
 peer lifecycle chaincode querycommitted --channelID main-channel --name issue_certificate

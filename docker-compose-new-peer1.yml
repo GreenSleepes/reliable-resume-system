@@ -82,8 +82,10 @@ services:
       - WALLET_PATH=/var/run/rrs/wallet
       - CA_URL=https://ca.applicant.mainauthority.com:9054
       - MSP_ID=MainAuthorityApplicantMSP
-      - USER_ID=admin
-      - USER_SECRET=adminpw
+      - REG_USER_HOST=client.applicant.mainauthority.com
+      - REG_USER_PORT=9443
+      - USER_ID=client
+      - USER_SECRET=clientpw
     working_dir: /var/run/rrs/client
     command: sh -c "npm install && node index"
     volumes:

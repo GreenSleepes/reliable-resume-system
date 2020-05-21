@@ -195,6 +195,8 @@ services:
       - WALLET_PATH=/var/run/rrs/wallet
       - CA_URL=https://ca.institution.mainauthority.com:8054
       - MSP_ID=MainAuthorityInstitutionMSP
+      - REG_USER_HOST=client.institution.mainauthority.com
+      - REG_USER_PORT=8443
       - USER_ID=admin
       - USER_SECRET=adminpw
     working_dir: /var/run/rrs/client
@@ -225,6 +227,8 @@ services:
       - WALLET_PATH=/var/run/rrs/wallet
       - CA_URL=https://ca.applicant.mainauthority.com:9054
       - MSP_ID=MainAuthorityApplicantMSP
+      - REG_USER_HOST=client.applicant.mainauthority.com
+      - REG_USER_PORT=9443
       - USER_ID=admin
       - USER_SECRET=adminpw
     working_dir: /var/run/rrs/client
