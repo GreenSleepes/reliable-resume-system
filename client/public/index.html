@@ -14,7 +14,7 @@
       const queryItemSubmit = async () => {
         try {
           const form = new FormData(document.getElementById('queryForm'));
-          const issuer = form.get('issuer');
+          const owner = form.get('owner');
           const contentHash = form.get('contentHash');
           const result = await API.queryItem({ issuer, contentHash });
           console.log(result);
