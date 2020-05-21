@@ -16,7 +16,7 @@
           const form = new FormData(document.getElementById('queryForm'));
           const owner = form.get('owner');
           const contentHash = form.get('contentHash');
-          const result = await API.queryItem({ issuer, contentHash });
+          const result = await API.queryItem({ owner, contentHash });
           console.log(result);
         } catch (err) {
           console.error(err);
