@@ -24,7 +24,7 @@ class API {
 
     /**
      * @typedef QueryItemForm
-     * @property {string} issuer
+     * @property {string} owner
      * @property {string} contentHash
      */
 
@@ -34,8 +34,8 @@ class API {
      * @returns {Promise<object>} The certificate.
      */
     static async queryItem(form) {
-        const { issuer, contentHash } = form;
-        const res = await httpReq(`/api/peer/certificate?issuer=${issuer}&contentHash=${contentHash}`);
+        const { owner, contentHash } = form;
+        const res = await httpReq(`/api/peer/certificate?owner=${owner}&contentHash=${contentHash}`);
         if (res.ok) return await res.json();
         else throw new Error(`${res.status} ${res.statusText}: ${await res.text()}`);
     }

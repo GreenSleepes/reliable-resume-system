@@ -13,8 +13,8 @@ require('./init')().then(client => {
     router.get('/certificate', async (req, res) => {
         try {
             console.log('Received request to search for the certificate.');
-            const { issuer, contentHash } = req.query;
-            const args = [issuer, contentHash];
+            const { owner, contentHash } = req.query;
+            const args = [owner, contentHash];
             for (const arg of args) {
                 if (typeof arg !== 'string') {
                     console.error('The request to request to search for the certificate has invalid elements.');
