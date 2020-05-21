@@ -1,68 +1,78 @@
 'use strict';
 
-class Item{
+class Item {
 
-   constructor(obj) {
-        this.class = this.getClass;
-        this.key = makeKey([obj.owner,obj.contentHash]);
+    constructor(obj) {
+        this.class = this.getClass();
+        this.key = this.makeKey([obj.owner, obj.contentHash]);
+        this.issuer = obj.issuer;
+        this.owner = obj.owner;
+        this.issueDate = obj.issueDate;
+        this.itemType = obj.itemType;
+        this.contentHash = obj.contentHash;
+        this.provingHash = obj.provingHash;
     }
 
     getClass() {
         return 'org.mainauthority.item';
     }
-    
+
     getOwner() {
         return this.owner;
     }
-   
+
     getCHash() {
         return this.contentHash;
     }
+
     getPHash() {
         return this.provingHash;
     }
-    
-    //combine the elements into a single key	
-    makeKey(keyParts) {
+
+    //combine the elements into a single key
+    static makeKey(keyParts) {
         return keyParts.map(part => JSON.stringify(part)).join(':');
     }
 
-    splitKey(key){
+    static splitKey(key) {
         return key.split(':');
     }
 
-    
+    getSplitKey() {
+        return Item.splitKey(this.key);
+    }
+
     //object toString()
-    serialize(object) {
+    serialize() {
         return Item.serialize(this);
     }
+
     static serialize(object) {
         return Buffer.from(JSON.stringify(object));
     }
-    
+
     //return data into object
     static deserialize(data, supportedClasses) {
-        let json = JSON.parse(data.toString());
-        let objClass = supportedClasses[json.class];
+        const json = JSON.parse(data.toString());
+        const objClass = supportedClasses[json.class];
         if (!objClass) {
             throw new Error(`Unknown class of ${json.class}`);
         }
-        let object = new (objClass)(json);
-
+        const object = new Item(json);
         return object;
     }
+
     //return class into object
     static deserializeClass(data, objClass) {
-        let json = JSON.parse(data.toString());
-        let object = new (objClass)(json);
+        const json = JSON.parse(data.toString());
+        const object = new Item(json);
         return object;
     }
-    
+
     static createInstance(issuer, owner, issueDate, itemType, contentHash, provingHash) {
         return new Item({ issuer, owner, issueDate, itemType, contentHash, provingHash });
     }
-    
-}
 
+}
 
 module.exports = Item;

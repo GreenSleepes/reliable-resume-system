@@ -1,4 +1,6 @@
 'use strict';
 
-const itemcontract = require('./itemcontract.js');
-module.exports.contracts = [itemcontract];
+const ItemContract = require('./itemcontract');
+
+module.exports.ItemContract = ItemContract;
+module.exports.contracts = [ItemContract];
