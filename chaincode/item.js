@@ -4,7 +4,7 @@ class Item {
 
     constructor(obj) {
         this.class = this.getClass();
-        this.key = this.makeKey([obj.owner, obj.contentHash]);
+        this.key = Item.makeKey([obj.owner, obj.contentHash]);
         this.issuer = obj.issuer;
         this.owner = obj.owner;
         this.issueDate = obj.issueDate;
