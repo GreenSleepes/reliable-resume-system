@@ -1,17 +1,9 @@
 'use strict';
 
-const { Contract, Context } = require('fabric-contract-api');
+const { Contract } = require('fabric-contract-api');
 const Item = require('./item');
-const ItemList = require('./itemlist');
-const crypto = require('crypto');
-
-//list of the resume items
-class ItemContext extends Context {
-    constructor() {
-        super();
-        this.itemList = new ItemList(this);
-    }
-}
+const ItemContext = require('./itemlist');
+const { createHash } = require('crypto');
 
 //item smart contract defination
 class ItemContract extends Contract {
@@ -27,11 +19,11 @@ class ItemContract extends Contract {
     //isssue resume item
     async issue(ctx, issuer, owner, issueDate, itemType, contentHash, pwd) {
 
-        const provingHash = crypto.createHash('sha256').update(pwd + contentHash).digest('hex');
-        const new_item = Item.createInstance(ctx, issuer, owner, issueDate, itemType, contentHash, provingHash);
+        const provingHash = createHash('sha256').update(pwd + contentHash).digest('hex');
+        const new_item = Item.createInstance(issuer, owner, issueDate, itemType, contentHash, provingHash);
 
         //adding the newly created item to the world state ledger
-        await ctx.itemList.addItem(new_item);
+        await ctx.addItem(new_item);
         return new_item.serialize();
 
     }
@@ -41,16 +33,16 @@ class ItemContract extends Contract {
 
         //retrive the target item from the ledger
         const itemKey = Item.makeKey([owner, contentHash]);
-        const new_item = await ctx.itemList.getItem(itemKey);
+        const new_item = await ctx.getItem(itemKey);
 
         //check if the update is made by owner as owner should be the only one who able the update so
         if (new_item.getOwner() !== owner) {
-            throw new Error('This item: ' + paperNumber + ' is not owned by ' + owner);
+            throw new Error('This item: ' + itemKey + ' is not owned by ' + owner);
         }
 
         const CHash = new_item.getCHash();
-        const currentPHash = crypto.createHash('sha256').update(currentPwd + CHash).digest('hex');
-        const newPHash = crypto.createHash('sha256').update(newPwd + CHash).digest('hex');
+        const currentPHash = createHash('sha256').update(currentPwd + CHash).digest('hex');
+        const newPHash = createHash('sha256').update(newPwd + CHash).digest('hex');
         //validate the old hash
         if (new_item.getPHash() === currentPHash) {
             new_item.setPHash(newPHash);
@@ -59,7 +51,7 @@ class ItemContract extends Contract {
         }
 
         //update the proving hash
-        await ctx.itemList.updateItem(new_item);
+        await ctx.updateItem(new_item);
         return new_item.serialize();
 
     }
@@ -69,7 +61,7 @@ class ItemContract extends Contract {
 
         //retrive the target item from the ledger
         const itemKey = Item.makeKey([owner, contentHash]);
-        const target_item = await ctx.itemList.getItem(itemKey);
+        const target_item = await ctx.getItem(itemKey);
 
         console.log(target_item.serialize());
         return target_item.serialize();

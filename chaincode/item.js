@@ -29,6 +29,10 @@ class Item {
         return this.provingHash;
     }
 
+    setPHash(newPHash) {
+        this.provingHash = newPHash;
+    }
+
     //combine the elements into a single key
     static makeKey(keyParts) {
         return keyParts.map(part => JSON.stringify(part)).join(':');
@@ -48,7 +52,7 @@ class Item {
     }
 
     static serialize(object) {
-        return Buffer.from(JSON.stringify(object));
+        return Buffer.from(`{"issuer":"${object.issuer}","owner":"${object.owner}","issueDate":"${object.issueDate}","itemType":"${object.itemType}","contentHash":"${object.contentHash}","provingHash":"${object.provingHash}"}`);
     }
 
     //return data into object
@@ -63,7 +67,7 @@ class Item {
     }
 
     //return class into object
-    static deserializeClass(data, objClass) {
+    static deserializeClass(data) {
         const json = JSON.parse(data.toString());
         const object = new Item(json);
         return object;

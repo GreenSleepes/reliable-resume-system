@@ -1,24 +1,26 @@
 'use strict';
 
+const { Context } = require('fabric-contract-api');
+
 const Item = require('./item');
 
-class ItemList {
+class ItemContext extends Context {
 
-    constructor(ctx) {
-        this.ctx = ctx;
+    constructor() {
+        super();
         this.name = 'org.mainauthority.itemlist';
         this.supportedClasses = { 'org.mainauthority.item': true };
     }
 
     async addItem(item) {
-        const key = this.ctx.stub.createCompositeKey(this.name, item.getSplitKey());
+        const key = this.stub.createCompositeKey(this.name, item.getSplitKey());
         const data = Item.serialize(item);
-        await this.ctx.stub.putState(key, data);
+        await this.stub.putState(key, data);
     }
 
     async getItem(key) {
-        const ledgerKey = this.ctx.stub.createCompositeKey(this.name, Item.splitKey(key));
-        const data = await this.ctx.stub.getState(ledgerKey);
+        const ledgerKey = this.stub.createCompositeKey(this.name, Item.splitKey(key));
+        const data = await this.stub.getState(ledgerKey);
         if (data && data.toString('utf8')) {
             const item = Item.deserialize(data, this.supportedClasses);
             return item;
@@ -28,9 +30,9 @@ class ItemList {
     }
 
     async updateItem(item) {
-        const key = this.ctx.stub.createCompositeKey(this.name, item.getSplitKey());
+        const key = this.stub.createCompositeKey(this.name, item.getSplitKey());
         const data = Item.serialize(item);
-        await this.ctx.stub.putState(key, data);
+        await this.stub.putState(key, data);
     }
 
     use(itemClass, item) {
@@ -39,4 +41,4 @@ class ItemList {
 
 }
 
-module.exports = ItemList;
+module.exports = ItemContext;
