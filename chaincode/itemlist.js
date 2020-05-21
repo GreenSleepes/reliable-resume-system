@@ -10,7 +10,7 @@ class ItemList extends HashList{
     }
 
     async addItem(item) {
-        return this.addHash(paper);
+        return this.addHash(item);
     }
 
     async getItem(item) {
