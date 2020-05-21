@@ -72,7 +72,7 @@ class ItemContract extends Contract {
         }
 
         console.log(target_item.serialize());
-        return new_item;
+        return target_item;
 
     }
 
