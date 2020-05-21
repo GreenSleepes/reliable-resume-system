@@ -12,8 +12,8 @@ require('./init')().then(client => {
 
     router.get('/certificate', async (req, res) => {
         try {
-            const { issuer, contentHash } = req.query;
-            const args = [issuer, contentHash];
+            const { owner, contentHash } = req.query;
+            const args = [owner, contentHash];
             args.forEach(arg => {
                 if (typeof arg !== 'string') res.sendStatus(400);
             });
