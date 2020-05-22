@@ -82,9 +82,9 @@ require('./init')().then(client => {
                     return;
                 }
             }
-            if (user.getMspid() === 'MainAuthorityApplicantMSP') {
-                console.error('Applicant cannot update the certificate.');
-                res.status(403).type('text/plain').send('Access Denied: Applicant cannot update the certificate.');
+            if (user.getMspid() !== 'MainAuthorityApplicantMSP') {
+                console.error('Only the applicant can update the certificate.');
+                res.status(403).type('text/plain').send('Access Denied: Only the applicant can update the certificate.');
                 return;
             }
             const issueCertificate = network.getContract('issue_certificate');
