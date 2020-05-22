@@ -17,7 +17,7 @@ require('./init')().then(client => {
             const args = [owner, contentHash];
             for (const arg of args) {
                 if (typeof arg !== 'string') {
-                    console.error('The request to request to search for the certificate has invalid elements.');
+                    console.error('The request to search for the certificate has invalid elements.');
                     res.sendStatus(400);
                     return;
                 }
@@ -41,7 +41,7 @@ require('./init')().then(client => {
             const args = [issuer, owner, issueDate, itemType, contentHash, pwd];
             for (const arg of args) {
                 if (typeof arg !== 'string') {
-                    console.error('The request to request to issue a new certificate has invalid elements.');
+                    console.error('The request to issue a new certificate has invalid elements.');
                     res.sendStatus(400);
                     return;
                 }
