@@ -1,0 +1,11 @@
+{
+  "name": "HashToolsExample",
+  "version": "1.0.0",
+  "description": "commandline program example to create and validate the hash in the resume item",
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
