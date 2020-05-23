@@ -29,7 +29,7 @@
    docker rm $(docker ps -a -q)
    docker volume prune
    docker system prune
-4. ./build.sh
+4. ./build.sh 
    docker-compose up -d
 ## Run
 The web client of institution
