@@ -22,5 +22,22 @@
  - GNU Make
  - G++
 ## Installation
-
+1. cd reliable-resume-sytem
+2. sudo chmod 777 ./build.sh
+   sudo chmod 777 ./reset.sh
+3. docker stop $(docker ps -a -q)
+   docker rm $(docker ps -a -q)
+   docker volume prune
+   docker system prune
+4. ./build.sh
+   docker-compose up -d
 ## Run
+The web client of institution
+https://localhost:8443
+The web client of applicant
+https://locahost:9443
+
+In case of web client not running, docker ps to see if the client contianer (client.__.mainauthority.com) is running
+If not, repeat the steps in above and move to the client folder
+cd ./client
+sudo rm -r node_modules
