@@ -53,7 +53,7 @@ require('./init')().then(client => {
             }
             if (issuer !== user.getName()) {
                 console.error('The issuer is not same as the logged-in identity.');
-                res.status(403).type('text/plain').send(`The issuer "${issuer}" is not same as the logged-in identity "${process.env.USER_ID}".`);
+                res.status(403).type('text/plain').send(`The issuer "${issuer}" is not same as the logged-in identity "${user.getName()}".`);
                 return;
             }
             const issueCertificate = network.getContract('issue_certificate');
@@ -85,6 +85,11 @@ require('./init')().then(client => {
             if (user.getMspid() !== 'MainAuthorityApplicantMSP') {
                 console.error('Only the applicant can update the certificate.');
                 res.status(403).type('text/plain').send('Access Denied: Only the applicant can update the certificate.');
+                return;
+            }
+            if (owner !== user.getName()) {
+                console.error('The owner is not same as the logged-in identity.');
+                res.status(403).type('text/plain').send(`The owner "${owner}" is not same as the logged-in identity "${user.getName()}".`);
                 return;
             }
             const issueCertificate = network.getContract('issue_certificate');

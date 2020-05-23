@@ -25,10 +25,10 @@ peer lifecycle chaincode queryinstalled >&tmp
 PACKAGE_ID=$(sed -n "/issue_certificate/{s/^Package ID: //; s/, Label:.*$//; p;}" tmp)
 
 # Approve the installed chaincode for peer1.applicant.mainauthority.com.
-peer lifecycle chaincode approveformyorg --signature-policy "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.member')" -o orderer.mainauthority.com:7050 --ordererTLSHostnameOverride orderer.mainauthority.com --tls true --cafile /etc/crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp/tlscacerts/tlsca.mainauthority.com-cert.pem --channelID main-channel --name issue_certificate --version 1 --package-id $PACKAGE_ID
+peer lifecycle chaincode approveformyorg --signature-policy "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.member')" -o orderer.mainauthority.com:7050 --ordererTLSHostnameOverride orderer.mainauthority.com --tls true --cafile /etc/crypto-config/ordererOrganizations/mainauthority.com/orderers/orderer.mainauthority.com/msp/tlscacerts/tlsca.mainauthority.com-cert.pem --channelID main-channel --name issue_certificate --version 1 --package-id $PACKAGE_ID --sequence 2
 
 # Check whether the chaincode definition is ready to be committed on the channel.
-peer lifecycle chaincode checkcommitreadiness --signature-policy "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.member')" --channelID main-channel --name issue_certificate --version 1
+peer lifecycle chaincode checkcommitreadiness --signature-policy "OR('MainAuthorityInstitutionMSP.admin', 'MainAuthorityInstitutionMSP.member')" --channelID main-channel --name issue_certificate --version 1 --sequence 2
 
 # Query the committed chaincode definitions by channel on peer1.applicant.mainauthority.com.
 peer lifecycle chaincode querycommitted --channelID main-channel --name issue_certificate
